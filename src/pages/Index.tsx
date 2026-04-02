@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Icon from "@/components/ui/icon"
-import EcoMap from "@/components/EcoMap"
+import EcoMap, { MonitoringPoint } from "@/components/EcoMap"
+import EcoChart from "@/components/EcoChart"
 
 interface FAQ {
   question: string
@@ -10,6 +11,7 @@ interface FAQ {
 
 const Index = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [selectedMapPoint, setSelectedMapPoint] = useState<MonitoringPoint | null>(null)
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
@@ -196,8 +198,8 @@ const Index = () => {
               Нажмите на точку, чтобы увидеть показатели. Фильтруйте по типу данных.
             </p>
           </div>
-          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 520 }}>
-            <EcoMap />
+          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 560 }}>
+            <EcoMap onSelectPoint={setSelectedMapPoint} />
           </div>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -214,6 +216,11 @@ const Index = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Chart under map */}
+          <div className="mt-6">
+            <EcoChart selectedPoint={selectedMapPoint} />
           </div>
         </div>
       </section>
