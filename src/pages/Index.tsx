@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Icon from "@/components/ui/icon"
+import EcoMap from "@/components/EcoMap"
 
 interface FAQ {
   question: string
@@ -186,59 +187,33 @@ const Index = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Interactive Map Section */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-12">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-balance">
-                Как работать с системой
-              </h2>
-              <p className="text-xl text-white/70 max-w-3xl mx-auto text-pretty">
-                Четыре шага от открытия карты до глубокого анализа данных
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {[
-                {
-                  n: "01.",
-                  title: "Выберите показатель",
-                  desc: "В панели слева выберите тип экологического показателя одним кликом. Карта мгновенно перестроится.",
-                },
-                {
-                  n: "02.",
-                  title: "Задайте период",
-                  desc: "Укажите временной интервал для отображения: сутки, неделя, месяц или произвольный диапазон.",
-                },
-                {
-                  n: "03.",
-                  title: "Изучите карту",
-                  desc: "Кликните на любую точку мониторинга — откроется детальная информация и история измерений.",
-                },
-                {
-                  n: "04.",
-                  title: "Анализируйте данные",
-                  desc: "Просматривайте графики динамики, сравнивайте показатели и экспортируйте отчёты.",
-                },
-              ].map((step) => (
-                <div key={step.n} className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-8 flex flex-col">
-                  <div className="text-3xl font-bold text-eco/60 mb-4">{step.n}</div>
-                  <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
-                  <p className="text-white/70 leading-relaxed text-sm">{step.desc}</p>
+          <div className="text-center mb-10">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Карта мониторинга</h2>
+            <p className="text-lg text-white/60 max-w-2xl mx-auto">
+              Нажмите на точку, чтобы увидеть показатели. Фильтруйте по типу данных.
+            </p>
+          </div>
+          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 520 }}>
+            <EcoMap />
+          </div>
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: "Wind", label: "Воздух", desc: "PM2.5, NO₂, CO₂" },
+              { icon: "Droplets", label: "Вода", desc: "pH, кислород" },
+              { icon: "RadioTower", label: "Радиация", desc: "мкЗв/ч" },
+              { icon: "Volume2", label: "Шум", desc: "дБ, сутки/ночь" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-4 flex items-center gap-3">
+                <Icon name={item.icon} size={18} className="text-eco flex-shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold">{item.label}</div>
+                  <div className="text-xs text-white/50">{item.desc}</div>
                 </div>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Button
-                size="lg"
-                className="bg-eco text-black hover:bg-eco/90 rounded-full px-12 py-4 text-lg font-semibold"
-              >
-                <Icon name="Map" size={20} className="mr-2" />
-                Перейти к карте
-              </Button>
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
