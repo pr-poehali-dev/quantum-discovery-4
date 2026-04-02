@@ -70,13 +70,19 @@ const Index = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-1">
-            {["Карта", "Показатели", "Аналитика", "Данные", "О системе"].map((item) => (
+            {[
+              { label: "Карта", href: "#map" },
+              { label: "Показатели", href: "#" },
+              { label: "Аналитика", href: "#" },
+              { label: "Данные", href: "#" },
+              { label: "О системе", href: "#" },
+            ].map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
@@ -88,7 +94,7 @@ const Index = () => {
             >
               Войти
             </a>
-            <Button className="bg-eco text-black hover:bg-eco/90 rounded-full px-6 font-semibold">
+            <Button className="bg-eco text-black hover:bg-eco/90 rounded-full px-6 font-semibold" onClick={() => document.getElementById("map")?.scrollIntoView({ behavior: "smooth" })}>
               Открыть карту
             </Button>
           </div>
@@ -111,7 +117,7 @@ const Index = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Button size="lg" className="bg-eco text-black hover:bg-eco/90 rounded-full px-8 py-4 text-lg font-semibold">
+            <Button size="lg" className="bg-eco text-black hover:bg-eco/90 rounded-full px-8 py-4 text-lg font-semibold" onClick={() => document.getElementById("map")?.scrollIntoView({ behavior: "smooth" })}>
               <Icon name="Map" size={20} className="mr-2" />
               Открыть карту мониторинга
             </Button>
@@ -143,6 +149,42 @@ const Index = () => {
                 <div className="text-sm text-white/60">{m.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Map Section */}
+      <section id="map" className="relative z-10 py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Карта мониторинга</h2>
+            <p className="text-lg text-white/60 max-w-2xl mx-auto">
+              Нажмите на точку, чтобы увидеть показатели. Фильтруйте по типу данных.
+            </p>
+          </div>
+          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 560 }}>
+            <EcoMap onSelectPoint={setSelectedMapPoint} />
+          </div>
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: "Wind", label: "Воздух", desc: "PM2.5, NO₂, CO₂" },
+              { icon: "Droplets", label: "Вода", desc: "pH, кислород" },
+              { icon: "RadioTower", label: "Радиация", desc: "мкЗв/ч" },
+              { icon: "Volume2", label: "Шум", desc: "дБ, сутки/ночь" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-4 flex items-center gap-3">
+                <Icon name={item.icon} size={18} className="text-eco flex-shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold">{item.label}</div>
+                  <div className="text-xs text-white/50">{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Chart under map */}
+          <div className="mt-6">
+            <EcoChart selectedPoint={selectedMapPoint} />
           </div>
         </div>
       </section>
@@ -185,42 +227,6 @@ const Index = () => {
                 <p className="text-white/70 leading-relaxed text-sm">{f.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Map Section */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Карта мониторинга</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
-              Нажмите на точку, чтобы увидеть показатели. Фильтруйте по типу данных.
-            </p>
-          </div>
-          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 560 }}>
-            <EcoMap onSelectPoint={setSelectedMapPoint} />
-          </div>
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: "Wind", label: "Воздух", desc: "PM2.5, NO₂, CO₂" },
-              { icon: "Droplets", label: "Вода", desc: "pH, кислород" },
-              { icon: "RadioTower", label: "Радиация", desc: "мкЗв/ч" },
-              { icon: "Volume2", label: "Шум", desc: "дБ, сутки/ночь" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-4 flex items-center gap-3">
-                <Icon name={item.icon} size={18} className="text-eco flex-shrink-0" />
-                <div>
-                  <div className="text-sm font-semibold">{item.label}</div>
-                  <div className="text-xs text-white/50">{item.desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Chart under map */}
-          <div className="mt-6">
-            <EcoChart selectedPoint={selectedMapPoint} />
           </div>
         </div>
       </section>
