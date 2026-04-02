@@ -152,9 +152,9 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
       zoomControl: false,
     })
 
-    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       attribution: "",
-      maxZoom: 20,
+      maxZoom: 19,
     }).addTo(map)
 
     L.control.zoom({ position: "topright" }).addTo(map)
