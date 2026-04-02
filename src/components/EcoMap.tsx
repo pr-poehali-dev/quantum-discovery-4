@@ -152,9 +152,9 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
       zoomControl: false,
     })
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-      maxZoom: 19,
+    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
+      attribution: "",
+      maxZoom: 20,
     }).addTo(map)
 
     L.control.zoom({ position: "topright" }).addTo(map)
@@ -226,6 +226,7 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
           50% { transform: scale(2.2); opacity: 0; }
         }
         .leaflet-container { background: #060E0A; }
+        .leaflet-control-attribution { display: none !important; }
       `}</style>
 
       <div ref={mapContainerRef} className="w-full h-full" />
