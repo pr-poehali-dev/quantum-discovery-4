@@ -137,6 +137,7 @@ const Index = () => {
               size="lg"
               variant="outline"
               className="bg-black/40 ring-1 ring-white/20 backdrop-blur border-0 text-white hover:bg-black/50 rounded-full px-8 py-4 text-lg"
+              onClick={() => document.getElementById("chart")?.scrollIntoView({ behavior: "smooth" })}
             >
               <Icon name="BarChart2" size={20} className="mr-2" />
               Посмотреть аналитику
@@ -195,7 +196,7 @@ const Index = () => {
           </div>
 
           {/* Chart under map */}
-          <div className="mt-6">
+          <div id="chart" className="mt-6">
             <EcoChart selectedPoint={selectedMapPoint} />
           </div>
         </div>
