@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "Forbidden without session",
+      "method": "GET",
+      "path": "/?action=stats",
+      "expectedStatus": 403,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

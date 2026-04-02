@@ -83,16 +83,20 @@ def handler(event: dict, context) -> dict:
         if cur.fetchone():
             conn.close()
             return {"statusCode": 409, "headers": cors_headers(), "body": json.dumps({"error": "Email уже зарегистрирован"})}
+        # Первый пользователь платформы становится администратором
+        cur.execute(f"SELECT COUNT(*) FROM {SCHEMA}.users")
+        user_count = cur.fetchone()[0]
+        role = "admin" if user_count == 0 else "user"
         cur.execute(
-            f"INSERT INTO {SCHEMA}.users (email, name, password_hash) VALUES (%s, %s, %s) RETURNING id",
-            (email, name, hash_password(password))
+            f"INSERT INTO {SCHEMA}.users (email, name, password_hash, role) VALUES (%s, %s, %s, %s) RETURNING id",
+            (email, name, hash_password(password), role)
         )
         user_id = cur.fetchone()[0]
         sid = secrets.token_hex(32)
         cur.execute(f"INSERT INTO {SCHEMA}.sessions (id, user_id) VALUES (%s, %s)", (sid, user_id))
         conn.commit()
         conn.close()
-        return {"statusCode": 200, "headers": cors_headers(), "body": json.dumps({"sessionId": sid, "name": name, "email": email, "role": "user"})}
+        return {"statusCode": 200, "headers": cors_headers(), "body": json.dumps({"sessionId": sid, "name": name, "email": email, "role": role})}
 
     # --- POST /login ---
     if method == "POST" and path.endswith("/login"):

@@ -58,6 +58,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <Icon name="User" size={14} className="text-eco" />
                 <span className="text-white/80 max-w-[120px] truncate">{user.name}</span>
               </div>
+              {user.role === "admin" && (
+                <Link
+                  to="/admin"
+                  className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-purple-500/15 ring-1 ring-purple-500/30 rounded-full text-sm text-purple-300 hover:bg-purple-500/25 transition-colors"
+                >
+                  <Icon name="ShieldCheck" size={14} />
+                  Админ
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm text-white/70"
