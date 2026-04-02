@@ -1,8 +1,11 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import Icon from "@/components/ui/icon"
 import EcoMap, { MonitoringPoint } from "@/components/EcoMap"
 import EcoChart from "@/components/EcoChart"
+import AuthModal from "@/components/AuthModal"
+import { useAuth } from "@/context/AuthContext"
 
 interface FAQ {
   question: string
@@ -12,6 +15,8 @@ interface FAQ {
 const Index = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedMapPoint, setSelectedMapPoint] = useState<MonitoringPoint | null>(null)
+  const [showAuth, setShowAuth] = useState(false)
+  const { user, logout } = useAuth()
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
@@ -71,29 +76,36 @@ const Index = () => {
 
           <div className="hidden md:flex items-center gap-1">
             {[
-              { label: "Карта", href: "#map" },
-              { label: "Показатели", href: "#" },
-              { label: "Аналитика", href: "#" },
-              { label: "Данные", href: "#" },
-              { label: "О системе", href: "#" },
+              { label: "Карта", to: "/map" },
+              { label: "Показатели", to: "/indicators" },
+              { label: "Аналитика", to: "/analytics" },
+              { label: "Данные", to: "/data" },
+              { label: "О системе", to: "/about" },
             ].map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                to={item.to}
                 className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#"
-              className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
-            >
-              Войти
-            </a>
+            {user ? (
+              <>
+                <span className="px-4 py-2 bg-white/5 ring-1 ring-white/15 backdrop-blur rounded-full text-sm text-white/70 hidden md:block max-w-[140px] truncate">{user.name}</span>
+                <button onClick={logout} className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm">Выйти</button>
+              </>
+            ) : (
+              <button
+                onClick={() => setShowAuth(true)}
+                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
+              >
+                Войти
+              </button>
+            )}
             <Button className="bg-eco text-black hover:bg-eco/90 rounded-full px-6 font-semibold" onClick={() => document.getElementById("map")?.scrollIntoView({ behavior: "smooth" })}>
               Открыть карту
             </Button>
@@ -418,6 +430,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
     </div>
   )
 }

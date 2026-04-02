@@ -118,6 +118,18 @@ const STATUS_LABELS: Record<string, string> = {
 const FILTER_TYPES = ["all", "air", "water", "radiation", "noise"] as const
 type FilterType = typeof FILTER_TYPES[number]
 
+const ALL_REGIONS = ["all", ...Array.from(new Set(ALL_POINTS.map(p => p.region)))]
+
+const REGION_BOUNDS: Record<string, { center: [number, number]; zoom: number }> = {
+  all: { center: [47.5, 37.5], zoom: 6 },
+  "Москва": { center: [55.751, 37.618], zoom: 10 },
+  "Запорожская обл.": { center: [47.1, 35.4], zoom: 8 },
+  "Херсонская обл.": { center: [46.5, 33.0], zoom: 8 },
+  "ДНР": { center: [47.9, 37.8], zoom: 9 },
+  "ЛНР": { center: [48.4, 38.9], zoom: 9 },
+  "Ростовская обл.": { center: [47.5, 40.5], zoom: 8 },
+}
+
 interface EcoMapProps {
   onSelectPoint?: (point: MonitoringPoint) => void
 }
@@ -129,6 +141,7 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
   const pulseMarkersRef = useRef<L.Marker[]>([])
   const [selected, setSelected] = useState<MonitoringPoint | null>(null)
   const [filter, setFilter] = useState<FilterType>("all")
+  const [regionFilter, setRegionFilter] = useState("all")
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return
@@ -158,7 +171,9 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
     markersRef.current = []
     pulseMarkersRef.current = []
 
-    const filtered = filter === "all" ? ALL_POINTS : ALL_POINTS.filter((p) => p.type === filter)
+    const filtered = ALL_POINTS
+      .filter(p => filter === "all" || p.type === filter)
+      .filter(p => regionFilter === "all" || p.region === regionFilter)
 
     filtered.forEach((point) => {
       const color = STATUS_COLORS[point.status]
@@ -187,7 +202,13 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
       })
       markersRef.current.push(marker)
     })
-  }, [filter, onSelectPoint])
+  }, [filter, regionFilter, onSelectPoint])
+
+  useEffect(() => {
+    if (!mapRef.current) return
+    const bounds = REGION_BOUNDS[regionFilter] ?? REGION_BOUNDS.all
+    mapRef.current.flyTo(bounds.center, bounds.zoom, { duration: 1 })
+  }, [regionFilter])
 
   const filterLabel: Record<FilterType, string> = {
     all: "Все",
@@ -210,20 +231,39 @@ export default function EcoMap({ onSelectPoint }: EcoMapProps) {
       <div ref={mapContainerRef} className="w-full h-full" />
 
       {/* Filter Panel */}
-      <div className="absolute top-4 left-4 z-[1000] flex flex-wrap gap-2">
-        {FILTER_TYPES.map((t) => (
-          <button
-            key={t}
-            onClick={() => setFilter(t)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur transition-all border
-              ${filter === t
-                ? "bg-eco text-black border-eco"
-                : "bg-black/60 text-white/80 border-white/20 hover:border-eco/50"
-              }`}
-          >
-            {filterLabel[t]}
-          </button>
-        ))}
+      <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-2 max-w-[calc(100%-80px)]">
+        {/* Type filters */}
+        <div className="flex flex-wrap gap-1.5">
+          {FILTER_TYPES.map((t) => (
+            <button
+              key={t}
+              onClick={() => setFilter(t)}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur transition-all border
+                ${filter === t
+                  ? "bg-eco text-black border-eco"
+                  : "bg-black/60 text-white/80 border-white/20 hover:border-eco/50"
+                }`}
+            >
+              {filterLabel[t]}
+            </button>
+          ))}
+        </div>
+        {/* Region filters */}
+        <div className="flex flex-wrap gap-1.5">
+          {ALL_REGIONS.map((r) => (
+            <button
+              key={r}
+              onClick={() => setRegionFilter(r)}
+              className={`px-3 py-1.5 rounded-full text-xs backdrop-blur transition-all border
+                ${regionFilter === r
+                  ? "bg-white/20 text-white border-white/50 font-semibold"
+                  : "bg-black/60 text-white/60 border-white/15 hover:border-white/35"
+                }`}
+            >
+              {r === "all" ? "Все регионы" : r}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Legend */}

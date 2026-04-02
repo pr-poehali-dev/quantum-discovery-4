@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS t_p98872536_quantum_discovery_4.users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  name VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(50) NOT NULL DEFAULT 'user',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS t_p98872536_quantum_discovery_4.sessions (
+  id VARCHAR(64) PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES t_p98872536_quantum_discovery_4.users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  expires_at TIMESTAMP NOT NULL DEFAULT (NOW() + INTERVAL '30 days')
+);
