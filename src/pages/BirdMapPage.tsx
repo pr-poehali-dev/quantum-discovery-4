@@ -107,27 +107,38 @@ function daysBetween(a: string, b: string) {
   return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000)
 }
 
-// Стрелка в конец полилинии
-function addArrow(map: L.Map, latlngs: [number, number][], color: string, layer: L.LayerGroup) {
+// Наконечник стрелки на каждый сегмент трека
+function addArrows(map: L.Map, latlngs: [number, number][], color: string, layer: L.LayerGroup) {
   if (latlngs.length < 2) return
-  const last  = latlngs[latlngs.length - 1]
-  const prev  = latlngs[latlngs.length - 2]
-  const angle = Math.atan2(last[1] - prev[1], last[0] - prev[0]) * 180 / Math.PI
 
-  const arrow = L.divIcon({
-    html: `<div style="
-      width:0;height:0;
-      border-left:7px solid transparent;
-      border-right:7px solid transparent;
-      border-bottom:14px solid ${color};
-      transform:rotate(${angle - 90}deg);
-      transform-origin:center bottom;
-    "></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    className: "",
-  })
-  layer.addLayer(L.marker(last, { icon: arrow, interactive: false }))
+  for (let i = 1; i < latlngs.length; i++) {
+    const from = map.latLngToContainerPoint(L.latLng(latlngs[i - 1][0], latlngs[i - 1][1]))
+    const to   = map.latLngToContainerPoint(L.latLng(latlngs[i][0],     latlngs[i][1]))
+
+    // Середина сегмента в географических координатах
+    const midLat = (latlngs[i - 1][0] + latlngs[i][0]) / 2
+    const midLon = (latlngs[i - 1][1] + latlngs[i][1]) / 2
+
+    // Угол в градусах (от пиксельных координат)
+    const angleDeg = Math.atan2(to.y - from.y, to.x - from.x) * 180 / Math.PI
+
+    const arrowHtml = `
+      <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg"
+           style="transform:rotate(${angleDeg + 90}deg);overflow:visible;display:block">
+        <polygon points="11,0 18,16 11,12 4,16"
+          fill="${color}" stroke="white" stroke-width="1.5"
+          stroke-linejoin="round"/>
+      </svg>`
+
+    const icon = L.divIcon({
+      html: arrowHtml,
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      className: "",
+    })
+
+    layer.addLayer(L.marker([midLat, midLon], { icon, interactive: false }))
+  }
 }
 
 export default function BirdMapPage() {
@@ -235,7 +246,7 @@ export default function BirdMapPage() {
           dashArray: "8 4",
         }).addTo(tracksLayer.current!)
 
-        addArrow(leafletMap.current!, latlngs, track.color, tracksLayer.current!)
+        addArrows(leafletMap.current!, latlngs, track.color, tracksLayer.current!)
       }
 
       // Точки фиксации
