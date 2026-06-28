@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react"
 import OrnithologyLayout from "@/components/OrnithologyLayout"
 import Icon from "@/components/ui/icon"
+import { useTheme } from "@/hooks/useTheme"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+
+const TILE_LIGHT = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+const TILE_DARK  = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 
 const POINTS = [
   { id: 1,  lat: 52.1234, lon: 46.5678, species: "Серый журавль",    count: 47,  status: "confirmed",            rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
@@ -48,8 +52,10 @@ export default function BirdMapPage() {
   const mapRef = useRef<HTMLDivElement>(null)
   const leafletMap = useRef<L.Map | null>(null)
   const markersLayer = useRef<L.LayerGroup | null>(null)
+  const tileLayer = useRef<L.TileLayer | null>(null)
   const [filter, setFilter] = useState("all")
   const [selected, setSelected] = useState<Point | null>(null)
+  const { theme } = useTheme()
 
   const visible = POINTS.filter(p => {
     if (filter === "all")       return true
@@ -68,7 +74,7 @@ export default function BirdMapPage() {
       zoomControl: true,
     })
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    tileLayer.current = L.tileLayer(TILE_LIGHT, {
       attribution: "",
       maxZoom: 19,
     }).addTo(map)
@@ -83,6 +89,16 @@ export default function BirdMapPage() {
       leafletMap.current = null
     }
   }, [])
+
+  // Swap tile layer on theme change
+  useEffect(() => {
+    if (!leafletMap.current || !tileLayer.current) return
+    tileLayer.current.remove()
+    tileLayer.current = L.tileLayer(theme === "dark" ? TILE_DARK : TILE_LIGHT, {
+      attribution: "",
+      maxZoom: 19,
+    }).addTo(leafletMap.current)
+  }, [theme])
 
   // Update markers when filter changes
   useEffect(() => {
