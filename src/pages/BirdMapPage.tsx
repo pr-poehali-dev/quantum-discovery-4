@@ -11,15 +11,70 @@ const TILE_DARK  = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.pn
 // ─── Точки наблюдений (разовые фиксации) ────────────────────────────────────
 const POINTS = [
   { id: 1,  lat: 52.1234, lon: 46.5678, species: "Серый журавль",    count: 47,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 2,  lat: 52.2341, lon: 46.6789, species: "Серый гусь",       count: 312, status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 3,  lat: 52.3456, lon: 46.7890, species: "Беркут",           count: 2,   status: "confirmed",           rare: true,  session: "SS-2024-001", biotope: "Лес" },
-  { id: 4,  lat: 52.4567, lon: 46.8901, species: "Белый аист",       count: 3,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
-  { id: 5,  lat: 52.5678, lon: 46.9012, species: "Чёрный дрозд",    count: 8,   status: "submitted",           rare: false, session: "SS-2024-002", biotope: "Лес" },
-  { id: 6,  lat: 43.1234, lon: 43.5678, species: "Орлан-белохвост", count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
-  { id: 7,  lat: 43.2345, lon: 43.6789, species: "Сапсан",          count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
-  { id: 8,  lat: 51.9876, lon: 46.4321, species: "Серая цапля",     count: 12,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
-  { id: 9,  lat: 52.0987, lon: 46.5432, species: "Скопа",           count: 2,   status: "needs_clarification", rare: true,  session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 10, lat: 52.6789, lon: 47.0123, species: "Чёрный аист",     count: 1,   status: "draft",               rare: true,  session: "SS-2024-002", biotope: "Лес" },
+  { id: 2,   lat: 52.2341, lon: 46.6789, species: "Серый гусь",             count: 312, status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 3,   lat: 52.3456, lon: 46.7890, species: "Беркут",                count: 2,   status: "confirmed",           rare: true,  session: "SS-2024-001", biotope: "Лес" },
+  { id: 4,   lat: 52.4567, lon: 46.8901, species: "Белый аист",            count: 3,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 5,   lat: 52.5678, lon: 46.9012, species: "Чёрный дрозд",         count: 8,   status: "submitted",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 6,   lat: 43.1234, lon: 43.5678, species: "Орлан-белохвост",      count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
+  { id: 7,   lat: 43.2345, lon: 43.6789, species: "Сапсан",               count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
+  { id: 8,   lat: 51.9876, lon: 46.4321, species: "Серая цапля",          count: 12,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 9,   lat: 52.0987, lon: 46.5432, species: "Скопа",                count: 2,   status: "needs_clarification", rare: true,  session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 10,  lat: 52.6789, lon: 47.0123, species: "Чёрный аист",          count: 1,   status: "draft",               rare: true,  session: "SS-2024-002", biotope: "Лес" },
+  // Кавказ
+  { id: 21,  lat: 45.050,  lon: 38.970,  species: "Болотный лунь",        count: 4,   status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Агроландшафт" },
+  { id: 22,  lat: 44.820,  lon: 38.920,  species: "Большой кроншнеп",     count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
+  { id: 23,  lat: 44.650,  lon: 38.310,  species: "Серебристая чайка",    count: 47,  status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Побережье" },
+  { id: 24,  lat: 44.710,  lon: 38.250,  species: "Большой баклан",       count: 120, status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Побережье" },
+  // Московская область
+  { id: 31,  lat: 55.812,  lon: 37.221,  species: "Домовый воробей",      count: 14,  status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Урбанизированные" },
+  { id: 32,  lat: 55.799,  lon: 37.245,  species: "Серая ворона",         count: 8,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Урбанизированные" },
+  { id: 33,  lat: 55.760,  lon: 37.190,  species: "Ворон",                count: 2,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 34,  lat: 55.834,  lon: 37.612,  species: "Зелёный дятел",       count: 1,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Урбанизированные" },
+  { id: 35,  lat: 55.720,  lon: 37.050,  species: "Филин",                count: 1,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  // Ленинградская область
+  { id: 41,  lat: 59.932,  lon: 30.214,  species: "Серая куропатка",      count: 23,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Речные поймы" },
+  { id: 42,  lat: 60.120,  lon: 30.450,  species: "Чибис",                count: 31,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 43,  lat: 59.990,  lon: 30.680,  species: "Обыкновенный зимородок",count: 1,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Речные поймы" },
+  { id: 44,  lat: 59.960,  lon: 30.810,  species: "Озёрная чайка",       count: 8,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  // Западная Сибирь
+  { id: 51,  lat: 54.980,  lon: 73.410,  species: "Тетеревятник",         count: 1,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Лес" },
+  { id: 52,  lat: 55.280,  lon: 73.760,  species: "Бекас",                count: 12,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 53,  lat: 54.910,  lon: 72.340,  species: "Речная крачка",        count: 34,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 54,  lat: 55.180,  lon: 73.080,  species: "Чибис",                count: 34,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  // Якутия
+  { id: 61,  lat: 62.450,  lon: 129.720, species: "Белая куропатка",      count: 3,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Тундра" },
+  { id: 62,  lat: 62.580,  lon: 130.150, species: "Тетерев",              count: 7,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Тундра" },
+  { id: 63,  lat: 62.310,  lon: 129.440, species: "Золотистая ржанка",    count: 22,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Тундра" },
+  { id: 64,  lat: 62.720,  lon: 130.480, species: "Луговой конёк",       count: 11,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Тундра" },
+  // Казахстан
+  { id: 71,  lat: 50.280,  lon: 61.440,  species: "Дербник",              count: 1,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Степь" },
+  { id: 72,  lat: 50.950,  lon: 62.180,  species: "Чернозобик",           count: 45,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Степь" },
+  { id: 73,  lat: 50.080,  lon: 61.050,  species: "Серебристая чайка",   count: 230, status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Пустыни" },
+  { id: 74,  lat: 50.410,  lon: 61.920,  species: "Обыкновенный канюк",  count: 2,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Степь" },
+  // Беларусь
+  { id: 81,  lat: 52.100,  lon: 23.680,  species: "Болотный лунь",       count: 3,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 82,  lat: 52.240,  lon: 24.120,  species: "Чёрный коршун",      count: 1,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Водно-болотные угодья" },
+  { id: 83,  lat: 52.180,  lon: 24.660,  species: "Речная крачка",       count: 18,  status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Водно-болотные угодья" },
+  // Украина — дельта Днепра
+  { id: 91,  lat: 46.610,  lon: 32.720,  species: "Озёрная чайка",      count: 34,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 92,  lat: 46.580,  lon: 32.840,  species: "Большой баклан",      count: 88,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 93,  lat: 46.700,  lon: 33.110,  species: "Серебристая чайка",   count: 52,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  // Урал
+  { id: 101, lat: 56.840,  lon: 60.620,  species: "Глухарь",              count: 2,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 102, lat: 57.120,  lon: 61.080,  species: "Чёрный дятел",         count: 1,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 103, lat: 56.960,  lon: 61.340,  species: "Неясыть серая",        count: 1,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  // Дальний Восток
+  { id: 111, lat: 43.870,  lon: 131.890, species: "Чёрный стриж",         count: 20,  status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Урбанизированные" },
+  { id: 112, lat: 43.720,  lon: 132.100, species: "Большой баклан",       count: 76,  status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Побережье" },
+  { id: 113, lat: 43.560,  lon: 131.720, species: "Серебристая чайка",    count: 91,  status: "confirmed",           rare: false, session: "SS-2024-003", biotope: "Побережье" },
+  // Армения
+  { id: 121, lat: 40.320,  lon: 45.280,  species: "Чибис",                count: 45,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 122, lat: 40.450,  lon: 45.420,  species: "Озёрная чайка",       count: 22,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 123, lat: 40.510,  lon: 45.620,  species: "Балобан",              count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-005", biotope: "Горные территории" },
+  // Узбекистан
+  { id: 131, lat: 40.780,  lon: 71.420,  species: "Деревенская ласточка", count: 18,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Агроландшафт" },
+  { id: 132, lat: 40.920,  lon: 71.860,  species: "Зелёный дятел",       count: 5,   status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Горные территории" },
+  { id: 133, lat: 40.660,  lon: 71.640,  species: "Белая трясогузка",     count: 34,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Агроландшафт" },
 ]
 
 // ─── Треки перемещений (серия фиксаций одного вида во времени) ───────────────
@@ -195,7 +250,7 @@ export default function BirdMapPage() {
   // ── Инициализация карты ──────────────────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return
-    const map = L.map(mapRef.current, { center: [50.5, 45.0], zoom: 5 })
+    const map = L.map(mapRef.current, { center: [54.0, 65.0], zoom: 3 })
     tileLayer.current   = L.tileLayer(themeRef.current === "dark" ? TILE_DARK : TILE_LIGHT, { attribution: "", maxZoom: 19 }).addTo(map)
     markersLayer.current = L.layerGroup().addTo(map)
     tracksLayer.current  = L.layerGroup().addTo(map)

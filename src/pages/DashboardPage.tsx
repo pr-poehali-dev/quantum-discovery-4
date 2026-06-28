@@ -4,9 +4,9 @@ import Icon from "@/components/ui/icon"
 import { Link } from "react-router-dom"
 
 const KPI = [
-  { label: "Наблюдений",      value: "10",  sub: "за все время",        icon: "Eye",         color: "text-bird" },
-  { label: "Видов птиц",      value: "9",   sub: "зафиксировано",       icon: "Bird",        color: "text-emerald-500" },
-  { label: "Редких видов",    value: "5",   sub: "из Красной книги",    icon: "AlertTriangle",color: "text-amber-500" },
+  { label: "Наблюдений",      value: "104", sub: "за все время",        icon: "Eye",          color: "text-bird" },
+  { label: "Видов птиц",      value: "65",  sub: "в справочнике",       icon: "Bird",         color: "text-emerald-500" },
+  { label: "Редких видов",    value: "9",   sub: "из Красной книги",    icon: "AlertTriangle",color: "text-amber-500" },
   { label: "Активных сессий", value: "3",   sub: "в процессе учёта",    icon: "ClipboardList",color: "text-purple-500" },
 ]
 
