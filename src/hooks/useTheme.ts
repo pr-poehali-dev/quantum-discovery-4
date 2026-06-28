@@ -2,21 +2,36 @@ import { useEffect, useState } from "react"
 
 export type Theme = "dark" | "light"
 
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem("theme") as Theme | null
-    return saved ?? "dark"
-  })
+function getTheme(): Theme {
+  return (localStorage.getItem("theme") as Theme | null) ?? "dark"
+}
 
+function applyTheme(t: Theme) {
+  if (t === "dark") {
+    document.documentElement.classList.add("dark")
+  } else {
+    document.documentElement.classList.remove("dark")
+  }
+  localStorage.setItem("theme", t)
+}
+
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>(getTheme)
+
+  // Применяем класс при изменении
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === "dark") {
-      root.classList.add("dark")
-    } else {
-      root.classList.remove("dark")
-    }
-    localStorage.setItem("theme", theme)
+    applyTheme(theme)
   }, [theme])
+
+  // Слушаем изменения класса на <html> от других экземпляров хука
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const current: Theme = document.documentElement.classList.contains("dark") ? "dark" : "light"
+      setTheme(prev => (prev !== current ? current : prev))
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+    return () => observer.disconnect()
+  }, [])
 
   const toggle = () => setTheme(t => (t === "dark" ? "light" : "dark"))
 
