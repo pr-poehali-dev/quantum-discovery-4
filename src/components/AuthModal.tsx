@@ -35,9 +35,9 @@ export default function AuthModal({ onClose }: AuthModalProps) {
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#0D1810] border border-white/15 rounded-3xl p-8 shadow-2xl">
+      <div className="relative w-full max-w-md bg-background border border-border rounded-3xl p-8 shadow-2xl">
         {/* Close */}
-        <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors">
+        <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <Icon name="X" size={20} />
         </button>
 
@@ -48,16 +48,16 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         </div>
 
         {/* Tabs */}
-        <div className="flex rounded-full border border-white/15 overflow-hidden mb-6">
+        <div className="flex rounded-full border border-border overflow-hidden mb-6">
           <button
             onClick={() => { setTab("login"); setError("") }}
-            className={`flex-1 py-2.5 text-sm font-semibold transition-all ${tab === "login" ? "bg-eco text-black" : "text-white/60 hover:text-white"}`}
+            className={`flex-1 py-2.5 text-sm font-semibold transition-all ${tab === "login" ? "bg-eco text-black" : "text-muted-foreground hover:text-foreground"}`}
           >
             Войти
           </button>
           <button
             onClick={() => { setTab("register"); setError("") }}
-            className={`flex-1 py-2.5 text-sm font-semibold transition-all ${tab === "register" ? "bg-eco text-black" : "text-white/60 hover:text-white"}`}
+            className={`flex-1 py-2.5 text-sm font-semibold transition-all ${tab === "register" ? "bg-eco text-black" : "text-muted-foreground hover:text-foreground"}`}
           >
             Регистрация
           </button>
@@ -66,36 +66,36 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         <form onSubmit={submit} className="space-y-4">
           {tab === "register" && (
             <div>
-              <label className="block text-sm text-white/60 mb-1.5">Имя и организация</label>
+              <label className="block text-sm text-muted-foreground mb-1.5">Имя и организация</label>
               <input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="Иван Петров, Росприроднадзор"
-                className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-eco/60 transition-colors"
+                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:border-eco/60 transition-colors"
                 required
               />
             </div>
           )}
           <div>
-            <label className="block text-sm text-white/60 mb-1.5">Email</label>
+            <label className="block text-sm text-muted-foreground mb-1.5">Email</label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="example@organization.ru"
-              className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-eco/60 transition-colors"
+              className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:border-eco/60 transition-colors"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-white/60 mb-1.5">Пароль</label>
+            <label className="block text-sm text-muted-foreground mb-1.5">Пароль</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder={tab === "register" ? "Минимум 6 символов" : "Ваш пароль"}
-              className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-eco/60 transition-colors"
+              className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:border-eco/60 transition-colors"
               required
             />
           </div>

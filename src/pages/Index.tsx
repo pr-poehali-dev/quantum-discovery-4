@@ -53,7 +53,7 @@ const Index = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-[#060E0A] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
       <div className="relative min-h-screen">
         {/* Background with Overlay */}
@@ -64,12 +64,12 @@ const Index = () => {
               "url(https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1920&q=80)",
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#060E0A]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
         </div>
 
         {/* Navigation */}
         <nav className="relative z-10 flex items-center justify-between p-6">
-          <div className="flex items-center gap-2 px-4 py-2 bg-black/40 ring-1 ring-eco/30 backdrop-blur rounded-full">
+          <div className="flex items-center gap-2 px-4 py-2 bg-black/40 ring-1 ring-eco/30 backdrop-blur rounded-full text-white">
             <Icon name="Leaf" size={18} className="text-eco" />
             <span className="font-medium">ЭкоМонитор</span>
           </div>
@@ -85,7 +85,7 @@ const Index = () => {
               <Link
                 key={item.label}
                 to={item.to}
-                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
+                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm text-white"
               >
                 {item.label}
               </Link>
@@ -95,13 +95,13 @@ const Index = () => {
           <div className="flex items-center gap-3">
             {user ? (
               <>
-                <span className="px-4 py-2 bg-white/5 ring-1 ring-white/15 backdrop-blur rounded-full text-sm text-white/70 hidden md:block max-w-[140px] truncate">{user.name}</span>
-                <button onClick={logout} className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm">Выйти</button>
+                <span className="px-4 py-2 bg-white/10 ring-1 ring-white/20 backdrop-blur rounded-full text-sm text-white/80 hidden md:block max-w-[140px] truncate">{user.name}</span>
+                <button onClick={logout} className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm text-white">Выйти</button>
               </>
             ) : (
               <button
                 onClick={() => setShowAuth(true)}
-                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm"
+                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm text-white"
               >
                 Войти
               </button>
@@ -113,7 +113,7 @@ const Index = () => {
         </nav>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 text-center text-white">
           <div className="mb-6 px-4 py-2 bg-black/40 ring-1 ring-eco/40 backdrop-blur rounded-full flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-eco animate-pulse" />
             <span className="text-sm font-medium text-eco">Данные обновляются в реальном времени</span>
@@ -156,10 +156,10 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {metrics.map((m) => (
-              <div key={m.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-6 text-center">
+              <div key={m.label} className="rounded-2xl bg-muted ring-1 ring-border backdrop-blur p-6 text-center">
                 <Icon name={m.icon} size={24} className="text-eco mx-auto mb-3" />
                 <div className="text-3xl font-bold text-eco mb-1">{m.value}</div>
-                <div className="text-sm text-white/60">{m.label}</div>
+                <div className="text-sm text-muted-foreground">{m.label}</div>
               </div>
             ))}
           </div>
@@ -175,7 +175,7 @@ const Index = () => {
               Нажмите на точку, чтобы увидеть показатели. Фильтруйте по типу данных.
             </p>
           </div>
-          <div className="rounded-3xl overflow-hidden ring-1 ring-white/10" style={{ height: 560 }}>
+          <div className="rounded-3xl overflow-hidden ring-1 ring-border" style={{ height: 560 }}>
             <EcoMap onSelectPoint={setSelectedMapPoint} />
           </div>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -185,11 +185,11 @@ const Index = () => {
               { icon: "RadioTower", label: "Радиация", desc: "мкЗв/ч" },
               { icon: "Volume2", label: "Шум", desc: "дБ, сутки/ночь" },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-4 flex items-center gap-3">
+              <div key={item.label} className="rounded-2xl bg-muted ring-1 ring-border p-4 flex items-center gap-3">
                 <Icon name={item.icon} size={18} className="text-eco flex-shrink-0" />
                 <div>
                   <div className="text-sm font-semibold">{item.label}</div>
-                  <div className="text-xs text-white/50">{item.desc}</div>
+                  <div className="text-xs text-muted-foreground">{item.desc}</div>
                 </div>
               </div>
             ))}
@@ -207,7 +207,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Возможности системы</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">Полный набор инструментов для работы с экологическими данными</p>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Полный набор инструментов для работы с экологическими данными</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {[
@@ -232,12 +232,12 @@ const Index = () => {
                 desc: "Интегральные индексы, сводные показатели и результаты автоматического анализа.",
               },
             ].map((f) => (
-              <div key={f.title} className="rounded-2xl bg-black/20 ring-1 ring-white/10 backdrop-blur p-8 text-center hover:ring-eco/40 transition-all">
+              <div key={f.title} className="rounded-2xl bg-muted ring-1 ring-border p-8 text-center hover:ring-eco/40 transition-all">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-eco/15 ring-1 ring-eco/30 mb-6">
                   <Icon name={f.icon} size={22} className="text-eco" />
                 </div>
                 <h3 className="text-lg font-semibold mb-3">{f.title}</h3>
-                <p className="text-white/70 leading-relaxed text-sm">{f.desc}</p>
+                <p className="text-muted-foreground leading-relaxed text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -247,13 +247,13 @@ const Index = () => {
       {/* Indicators Section */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl bg-black/30 ring-1 ring-white/10 backdrop-blur p-12">
+          <div className="rounded-3xl bg-muted ring-1 ring-border p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
                   Комплексный мониторинг среды
                 </h2>
-                <p className="text-lg text-white/70 leading-relaxed mb-8">
+                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                   Система интегрирует данные из разных источников: государственные посты, мобильные датчики, лабораторные измерения и спутниковые данные — в единую актуальную картину.
                 </p>
                 <div className="space-y-4">
@@ -265,10 +265,10 @@ const Index = () => {
                   ].map((ind) => (
                     <div key={ind.label}>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-white/80">{ind.label}</span>
-                        <span className="text-white/50">покрытие {ind.pct}</span>
+                        <span className="text-foreground">{ind.label}</span>
+                        <span className="text-muted-foreground">покрытие {ind.pct}</span>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-2 bg-border rounded-full overflow-hidden">
                         <div className={`h-full ${ind.color} rounded-full`} style={{ width: ind.pct }} />
                       </div>
                     </div>
@@ -285,10 +285,10 @@ const Index = () => {
                   { icon: "Thermometer", label: "Климат", desc: "Температура, осадки, ветер" },
                   { icon: "FlaskConical", label: "Почва", desc: "Тяжёлые металлы, pH, влага" },
                 ].map((ind) => (
-                  <div key={ind.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-5 hover:ring-eco/30 transition-all">
+                  <div key={ind.label} className="rounded-2xl bg-background ring-1 ring-border p-5 hover:ring-eco/30 transition-all">
                     <Icon name={ind.icon} size={20} className="text-eco mb-3" />
                     <div className="font-semibold mb-1">{ind.label}</div>
-                    <div className="text-xs text-white/50">{ind.desc}</div>
+                    <div className="text-xs text-muted-foreground">{ind.desc}</div>
                   </div>
                 ))}
               </div>
@@ -300,13 +300,13 @@ const Index = () => {
       {/* FAQ Section */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-12">
+          <div className="rounded-3xl bg-muted ring-1 ring-border p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               <div>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-balance">
                   Частые вопросы
                 </h2>
-                <p className="text-lg text-white/70 leading-relaxed text-pretty">
+                <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
                   Всё, что нужно знать о работе с системой экологического мониторинга региона.
                 </p>
               </div>
@@ -315,18 +315,18 @@ const Index = () => {
                 {faqs.map((faq, index) => (
                   <div
                     key={index}
-                    className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur overflow-hidden"
+                    className="rounded-2xl bg-background ring-1 ring-border overflow-hidden"
                   >
                     <button
                       onClick={() => toggleFaq(index)}
-                      className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+                      className="w-full p-6 text-left flex items-center justify-between hover:bg-muted transition-colors"
                     >
                       <h3 className="text-base font-semibold pr-4">{faq.question}</h3>
                       <Icon name={openFaq === index ? "Minus" : "Plus"} size={18} className="flex-shrink-0 text-eco" />
                     </button>
                     {openFaq === index && (
                       <div className="px-6 pb-6">
-                        <p className="text-white/70 leading-relaxed text-sm">{faq.answer}</p>
+                        <p className="text-muted-foreground leading-relaxed text-sm">{faq.answer}</p>
                       </div>
                     )}
                   </div>
@@ -340,16 +340,16 @@ const Index = () => {
       {/* Contact Section */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-3xl bg-black/20 ring-1 ring-white/15 backdrop-blur p-12">
+          <div className="rounded-3xl bg-muted ring-1 ring-border p-12">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Запросить доступ</h2>
-              <p className="text-lg text-white/60 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Для организаций, исследователей и государственных структур — напишите нам для подключения к системе.
               </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              <div className="rounded-2xl bg-white/95 text-black p-8 shadow-2xl">
+              <div className="rounded-2xl bg-background ring-1 ring-border text-foreground p-8 shadow-2xl">
                 <h3 className="text-2xl font-bold mb-6">Отправить запрос</h3>
                 <form className="space-y-5">
                   <div>
@@ -357,7 +357,7 @@ const Index = () => {
                     <input
                       type="text"
                       id="name"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-muted text-foreground focus:ring-2 focus:ring-eco/50 focus:border-transparent outline-none"
                       placeholder="Иван Петров, Росприроднадзор"
                     />
                   </div>
@@ -366,7 +366,7 @@ const Index = () => {
                     <input
                       type="email"
                       id="email"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-muted text-foreground focus:ring-2 focus:ring-eco/50 focus:border-transparent outline-none"
                       placeholder="example@organization.ru"
                     />
                   </div>
@@ -375,18 +375,18 @@ const Index = () => {
                     <textarea
                       id="message"
                       rows={4}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none outline-none"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-muted text-foreground focus:ring-2 focus:ring-eco/50 focus:border-transparent resize-none outline-none"
                       placeholder="Опишите, для каких задач вам нужен доступ..."
                     />
                   </div>
-                  <Button className="w-full bg-[#2D9B5A] text-white hover:bg-[#238C4E] rounded-lg py-3 font-semibold text-base">
+                  <Button className="w-full bg-eco text-black hover:bg-eco/90 rounded-lg py-3 font-semibold text-base">
                     Отправить заявку
                   </Button>
                 </form>
               </div>
 
               <div className="space-y-6">
-                <p className="text-lg text-white/80 leading-relaxed">
+                <p className="text-lg text-foreground leading-relaxed">
                   Система открыта для государственных органов, научных организаций, экологических НКО и коммерческих структур, чья деятельность связана с охраной окружающей среды.
                 </p>
                 {[
@@ -394,13 +394,13 @@ const Index = () => {
                   { icon: "GraduationCap", title: "Исследователи", desc: "Экспорт данных, API, исторические архивы" },
                   { icon: "Users", title: "НКО и общество", desc: "Публичный доступ к основным показателям" },
                 ].map((item) => (
-                  <div key={item.title} className="flex gap-4 items-start rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
+                  <div key={item.title} className="flex gap-4 items-start rounded-2xl bg-background ring-1 ring-border p-5">
                     <div className="w-10 h-10 rounded-lg bg-eco/15 ring-1 ring-eco/30 flex items-center justify-center flex-shrink-0">
                       <Icon name={item.icon} size={18} className="text-eco" />
                     </div>
                     <div>
                       <div className="font-semibold mb-1">{item.title}</div>
-                      <div className="text-sm text-white/60">{item.desc}</div>
+                      <div className="text-sm text-muted-foreground">{item.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -411,22 +411,22 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-12 px-6 border-t border-white/10">
+      <footer className="relative z-10 py-12 px-6 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <Icon name="Leaf" size={18} className="text-eco" />
               <span className="font-semibold">ЭкоМонитор</span>
-              <span className="text-white/40 text-sm ml-2">Система визуализации экологических показателей</span>
+              <span className="text-muted-foreground text-sm ml-2">Система визуализации экологических показателей</span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-white/50">
-              <a href="#" className="hover:text-white transition-colors">Документация</a>
-              <a href="#" className="hover:text-white transition-colors">API</a>
-              <a href="#" className="hover:text-white transition-colors">Политика данных</a>
-              <a href="#" className="hover:text-white transition-colors">Контакты</a>
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-foreground transition-colors">Документация</a>
+              <a href="#" className="hover:text-foreground transition-colors">API</a>
+              <a href="#" className="hover:text-foreground transition-colors">Политика данных</a>
+              <a href="#" className="hover:text-foreground transition-colors">Контакты</a>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-white/5 text-center text-sm text-white/30">
+          <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
             © 2024 ЭкоМонитор. Данные предоставляются в информационных целях.
           </div>
         </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import Icon from "@/components/ui/icon"
 import { useAuth } from "@/context/AuthContext"
 import AuthModal from "@/components/AuthModal"
+import { useTheme } from "@/hooks/useTheme"
 
 const NAV_ITEMS = [
   { label: "Карта", href: "/map", icon: "Map" },
@@ -22,12 +23,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [showAuth, setShowAuth] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const { theme, toggle } = useTheme()
 
   return (
-    <div className="min-h-screen bg-[#060E0A] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-black/60 backdrop-blur border-b border-white/10">
-        <Link to="/" className="flex items-center gap-2 px-4 py-2 bg-black/40 ring-1 ring-eco/30 backdrop-blur rounded-full">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
+        <Link to="/" className="flex items-center gap-2 px-4 py-2 bg-muted ring-1 ring-eco/30 backdrop-blur rounded-full">
           <Icon name="Leaf" size={18} className="text-eco" />
           <span className="font-medium">ЭкоМонитор</span>
         </Link>
@@ -41,7 +43,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm transition-colors
                 ${location.pathname === item.href
                   ? "bg-eco/15 text-eco ring-1 ring-eco/30"
-                  : "bg-black/40 ring-1 ring-white/20 backdrop-blur hover:bg-black/50"
+                  : "bg-muted ring-1 ring-border hover:bg-accent"
                 }`}
             >
               <Icon name={item.icon} size={14} />
@@ -52,16 +54,25 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         {/* Auth controls */}
         <div className="flex items-center gap-3">
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            className="p-2 rounded-full bg-muted ring-1 ring-border hover:bg-accent transition-colors"
+            title={theme === "dark" ? "Светлая тема" : "Тёмная тема"}
+          >
+            <Icon name={theme === "dark" ? "Sun" : "Moon"} size={16} />
+          </button>
+
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 ring-1 ring-white/15 rounded-full text-sm">
+              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-muted ring-1 ring-border rounded-full text-sm">
                 <Icon name="User" size={14} className="text-eco" />
-                <span className="text-white/80 max-w-[120px] truncate">{user.name}</span>
+                <span className="text-muted-foreground max-w-[120px] truncate">{user.name}</span>
               </div>
               {user.role === "admin" && (
                 <Link
                   to="/admin"
-                  className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-purple-500/15 ring-1 ring-purple-500/30 rounded-full text-sm text-purple-300 hover:bg-purple-500/25 transition-colors"
+                  className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-purple-500/15 ring-1 ring-purple-500/30 rounded-full text-sm text-purple-600 dark:text-purple-300 hover:bg-purple-500/25 transition-colors"
                 >
                   <Icon name="ShieldCheck" size={14} />
                   Админ
@@ -69,7 +80,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               )}
               <button
                 onClick={logout}
-                className="px-4 py-2 bg-black/40 ring-1 ring-white/20 backdrop-blur rounded-full hover:bg-black/50 transition-colors text-sm text-white/70"
+                className="px-4 py-2 bg-muted ring-1 ring-border rounded-full hover:bg-accent transition-colors text-sm text-muted-foreground"
               >
                 Выйти
               </button>
@@ -85,7 +96,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {/* Mobile menu */}
           <button
-            className="md:hidden p-2 rounded-full bg-black/40 ring-1 ring-white/20"
+            className="md:hidden p-2 rounded-full bg-muted ring-1 ring-border"
             onClick={() => setMenuOpen(v => !v)}
           >
             <Icon name={menuOpen ? "X" : "Menu"} size={18} />
@@ -95,14 +106,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Mobile menu dropdown */}
       {menuOpen && (
-        <div className="md:hidden bg-black/90 backdrop-blur border-b border-white/10 px-6 py-4 space-y-2 z-40">
+        <div className="md:hidden bg-background/95 backdrop-blur border-b border-border px-6 py-4 space-y-2 z-40">
           {NAV_ITEMS.map(item => (
             <Link
               key={item.href}
               to={item.href}
               onClick={() => setMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors
-                ${location.pathname === item.href ? "bg-eco/15 text-eco" : "text-white/70 hover:bg-white/5"}`}
+                ${location.pathname === item.href ? "bg-eco/15 text-eco" : "text-muted-foreground hover:bg-accent"}`}
             >
               <Icon name={item.icon} size={16} />
               {item.label}
