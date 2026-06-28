@@ -223,13 +223,29 @@ export default function BirdMapPage() {
   const [filter, setFilter]         = useState("all")
   const [fromIdx, setFromIdx]       = useState(0)
   const [toIdx, setToIdx]           = useState(UNIQUE_DATES.length - 1)
-  const [activeTrack, setActiveTrack] = useState<string | null>(null)
+  const [activeTrackIds, setActiveTrackIds] = useState<Set<string>>(new Set(TRACKS.map(t => t.id)))
   const [selectedPoint, setSelectedPoint] = useState<ObsPoint | null>(null)
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
   const { theme } = useTheme()
 
   const dateFrom = idxToDate(fromIdx)
   const dateTo   = idxToDate(toIdx)
+
+  const allSelected  = activeTrackIds.size === TRACKS.length
+  const noneSelected = activeTrackIds.size === 0
+
+  function toggleTrack(id: string) {
+    setActiveTrackIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+  function toggleAll() {
+    if (allSelected) setActiveTrackIds(new Set())
+    else setActiveTrackIds(new Set(TRACKS.map(t => t.id)))
+  }
 
   useEffect(() => { themeRef.current = theme }, [theme])
 
@@ -240,9 +256,7 @@ export default function BirdMapPage() {
     return p.session === filter
   })
 
-  const visibleTracks = TRACKS.filter(t =>
-    !activeTrack || t.id === activeTrack
-  ).map(t => ({
+  const visibleTracks = TRACKS.filter(t => activeTrackIds.has(t.id)).map(t => ({
     ...t,
     points: t.points.filter(p => p.date >= dateFrom && p.date <= dateTo),
   })).filter(t => t.points.length > 0)
@@ -363,7 +377,7 @@ export default function BirdMapPage() {
         tracksLayer.current!.addLayer(circle)
       })
     })
-  }, [mode, dateFrom, dateTo, activeTrack])
+  }, [mode, dateFrom, dateTo, activeTrackIds])
 
   // ─── JSX ─────────────────────────────────────────────────────────────────
   const FILTERS = [
@@ -416,32 +430,65 @@ export default function BirdMapPage() {
 
           {/* Фильтры треков */}
           {mode === "tracks" && (
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap gap-3 items-center">
+              {/* Даты */}
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Icon name="Calendar" size={13} className="text-bird" />
                 <span className="font-medium text-foreground">{fmtDate(dateFrom)}</span>
                 <span>—</span>
                 <span className="font-medium text-foreground">{fmtDate(dateTo)}</span>
-                <span className="text-muted-foreground ml-1">({daysBetween(dateFrom, dateTo)} дн.)</span>
+                <span className="ml-1">({daysBetween(dateFrom, dateTo)} дн.)</span>
               </div>
-              <div className="flex flex-wrap gap-1.5 ml-1">
-                <button onClick={() => setActiveTrack(null)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
-                    ${!activeTrack ? "bg-bird text-white border-bird" : "border-border text-muted-foreground hover:border-bird/40"}`}
-                >
-                  Все
-                </button>
-                {TRACKS.map(t => (
-                  <button key={t.id} onClick={() => setActiveTrack(prev => prev === t.id ? null : t.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
-                      ${activeTrack === t.id ? "text-white border-transparent" : "border-border text-muted-foreground hover:border-bird/40"}`}
-                    style={activeTrack === t.id ? { background: t.color, borderColor: t.color } : {}}
+
+              {/* Разделитель */}
+              <div className="h-4 w-px bg-border" />
+
+              {/* Кнопка «Все / Сбросить» */}
+              <button
+                onClick={toggleAll}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors
+                  ${allSelected ? "bg-bird text-white border-bird" : "border-border text-muted-foreground hover:border-bird/40"}`}
+              >
+                {allSelected ? <Icon name="CheckSquare" size={12} /> : <Icon name="Square" size={12} />}
+                {allSelected ? "Снять все" : "Выбрать все"}
+              </button>
+
+              {/* Чекбокс-кнопки для каждого трека */}
+              {TRACKS.map(t => {
+                const active = activeTrackIds.has(t.id)
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => toggleTrack(t.id)}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all"
+                    style={active
+                      ? { background: t.color + "22", borderColor: t.color, color: t.color }
+                      : { borderColor: "hsl(var(--border))", color: "hsl(var(--muted-foreground))" }
+                    }
                   >
-                    <span className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ background: t.color }} />
+                    {/* Цветная точка с галкой внутри */}
+                    <span
+                      className="flex items-center justify-center w-3.5 h-3.5 rounded-full flex-shrink-0 transition-all"
+                      style={{ background: active ? t.color : "transparent", border: `2px solid ${t.color}` }}
+                    >
+                      {active && (
+                        <svg width="7" height="7" viewBox="0 0 7 7" fill="none">
+                          <path d="M1 3.5L3 5.5L6 1.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </span>
                     {t.species}
+                    {t.rare && <Icon name="Star" size={10} className="text-amber-400 flex-shrink-0" />}
                   </button>
-                ))}
-              </div>
+                )
+              })}
+
+              {noneSelected && (
+                <span className="text-xs text-amber-500 flex items-center gap-1">
+                  <Icon name="AlertCircle" size={12} />
+                  Нет выбранных треков
+                </span>
+              )}
             </div>
           )}
 
