@@ -3,14 +3,17 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/context/AuthContext";
-import Index from "./pages/Index";
-import MapPage from "./pages/MapPage";
-import IndicatorsPage from "./pages/IndicatorsPage";
+import DashboardPage from "./pages/DashboardPage";
+import SessionsPage from "./pages/SessionsPage";
+import ObservationsPage from "./pages/ObservationsPage";
+import BirdMapPage from "./pages/BirdMapPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
-import DataPage from "./pages/DataPage";
-import AboutPage from "./pages/AboutPage";
+import DictionariesPage from "./pages/DictionariesPage";
+import ReportsPage from "./pages/ReportsPage";
+import ExportPage from "./pages/ExportPage";
+import ImportPage from "./pages/ImportPage";
 import AdminPage from "./pages/AdminPage";
+import AuditPage from "./pages/AuditPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,18 +24,22 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/indicators" element={<IndicatorsPage />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/data" element={<DataPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+        <Routes>
+          <Route path="/"              element={<DashboardPage />} />
+          <Route path="/sessions"      element={<SessionsPage />} />
+          <Route path="/sessions/new"  element={<SessionsPage />} />
+          <Route path="/observations"  element={<ObservationsPage />} />
+          <Route path="/observations/new" element={<ObservationsPage />} />
+          <Route path="/map"           element={<BirdMapPage />} />
+          <Route path="/analytics"     element={<AnalyticsPage />} />
+          <Route path="/dictionaries"  element={<DictionariesPage />} />
+          <Route path="/reports"       element={<ReportsPage />} />
+          <Route path="/export"        element={<ExportPage />} />
+          <Route path="/import"        element={<ImportPage />} />
+          <Route path="/admin"         element={<AdminPage />} />
+          <Route path="/audit"         element={<AuditPage />} />
+          <Route path="*"              element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

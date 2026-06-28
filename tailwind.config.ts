@@ -19,6 +19,8 @@ export default {
 		},
 		extend: {
 			colors: {
+				bird: '#4A90D9',
+				'bird-dark': '#2E6FB5',
 				eco: '#3DBA6F',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
