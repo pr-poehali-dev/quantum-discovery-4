@@ -8,18 +8,82 @@ import "leaflet/dist/leaflet.css"
 const TILE_LIGHT = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
 const TILE_DARK  = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 
+// ─── Точки наблюдений (разовые фиксации) ────────────────────────────────────
 const POINTS = [
-  { id: 1,  lat: 52.1234, lon: 46.5678, species: "Серый журавль",    count: 47,  status: "confirmed",            rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 2,  lat: 52.2341, lon: 46.6789, species: "Серый гусь",       count: 312, status: "confirmed",            rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 3,  lat: 52.3456, lon: 46.7890, species: "Беркут",           count: 2,   status: "confirmed",            rare: true,  session: "SS-2024-001", biotope: "Лес" },
-  { id: 4,  lat: 52.4567, lon: 46.8901, species: "Белый аист",       count: 3,   status: "confirmed",            rare: false, session: "SS-2024-002", biotope: "Лес" },
-  { id: 5,  lat: 52.5678, lon: 46.9012, species: "Чёрный дрозд",    count: 8,   status: "submitted",            rare: false, session: "SS-2024-002", biotope: "Лес" },
-  { id: 6,  lat: 43.1234, lon: 43.5678, species: "Орлан-белохвост", count: 1,   status: "confirmed",            rare: true,  session: "SS-2024-003", biotope: "Побережье" },
-  { id: 7,  lat: 43.2345, lon: 43.6789, species: "Сапсан",          count: 1,   status: "confirmed",            rare: true,  session: "SS-2024-003", biotope: "Побережье" },
-  { id: 8,  lat: 51.9876, lon: 46.4321, species: "Серая цапля",     count: 12,  status: "confirmed",            rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
-  { id: 9,  lat: 52.0987, lon: 46.5432, species: "Скопа",           count: 2,   status: "needs_clarification",  rare: true,  session: "SS-2024-001", biotope: "Водно-болотные угодья" },
-  { id: 10, lat: 52.6789, lon: 47.0123, species: "Чёрный аист",     count: 1,   status: "draft",                rare: true,  session: "SS-2024-002", biotope: "Лес" },
+  { id: 1,  lat: 52.1234, lon: 46.5678, species: "Серый журавль",    count: 47,  status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 2,  lat: 52.2341, lon: 46.6789, species: "Серый гусь",       count: 312, status: "confirmed",           rare: false, session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 3,  lat: 52.3456, lon: 46.7890, species: "Беркут",           count: 2,   status: "confirmed",           rare: true,  session: "SS-2024-001", biotope: "Лес" },
+  { id: 4,  lat: 52.4567, lon: 46.8901, species: "Белый аист",       count: 3,   status: "confirmed",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 5,  lat: 52.5678, lon: 46.9012, species: "Чёрный дрозд",    count: 8,   status: "submitted",           rare: false, session: "SS-2024-002", biotope: "Лес" },
+  { id: 6,  lat: 43.1234, lon: 43.5678, species: "Орлан-белохвост", count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
+  { id: 7,  lat: 43.2345, lon: 43.6789, species: "Сапсан",          count: 1,   status: "confirmed",           rare: true,  session: "SS-2024-003", biotope: "Побережье" },
+  { id: 8,  lat: 51.9876, lon: 46.4321, species: "Серая цапля",     count: 12,  status: "confirmed",           rare: false, session: "SS-2024-005", biotope: "Водно-болотные угодья" },
+  { id: 9,  lat: 52.0987, lon: 46.5432, species: "Скопа",           count: 2,   status: "needs_clarification", rare: true,  session: "SS-2024-001", biotope: "Водно-болотные угодья" },
+  { id: 10, lat: 52.6789, lon: 47.0123, species: "Чёрный аист",     count: 1,   status: "draft",               rare: true,  session: "SS-2024-002", biotope: "Лес" },
 ]
+
+// ─── Треки перемещений (серия фиксаций одного вида во времени) ───────────────
+const TRACKS = [
+  {
+    id: "track-crane",
+    species: "Серый журавль",
+    latin: "Grus grus",
+    color: "#4A90D9",
+    rare: false,
+    points: [
+      { lat: 51.20, lon: 44.10, date: "2024-04-01", time: "06:15", count: 24 },
+      { lat: 51.55, lon: 45.30, date: "2024-04-03", time: "07:40", count: 31 },
+      { lat: 52.12, lon: 46.57, date: "2024-04-06", time: "08:30", count: 47 },
+      { lat: 52.70, lon: 47.90, date: "2024-04-10", time: "09:10", count: 53 },
+      { lat: 53.15, lon: 49.20, date: "2024-04-15", time: "07:55", count: 41 },
+    ],
+  },
+  {
+    id: "track-eagle",
+    species: "Беркут",
+    latin: "Aquila chrysaetos",
+    color: "#f59e0b",
+    rare: true,
+    points: [
+      { lat: 51.80, lon: 45.50, date: "2024-04-10", time: "10:00", count: 1 },
+      { lat: 52.05, lon: 46.20, date: "2024-04-13", time: "11:30", count: 2 },
+      { lat: 52.35, lon: 46.79, date: "2024-04-17", time: "09:00", count: 2 },
+      { lat: 52.60, lon: 47.40, date: "2024-04-21", time: "08:20", count: 1 },
+    ],
+  },
+  {
+    id: "track-osprey",
+    species: "Скопа",
+    latin: "Pandion haliaetus",
+    color: "#e879f9",
+    rare: true,
+    points: [
+      { lat: 51.50, lon: 44.80, date: "2024-04-08", time: "07:00", count: 1 },
+      { lat: 51.78, lon: 45.60, date: "2024-04-11", time: "08:45", count: 2 },
+      { lat: 52.10, lon: 46.54, date: "2024-04-15", time: "09:45", count: 2 },
+      { lat: 52.45, lon: 47.20, date: "2024-04-20", time: "08:10", count: 1 },
+      { lat: 52.90, lon: 48.50, date: "2024-04-28", time: "07:30", count: 2 },
+    ],
+  },
+  {
+    id: "track-stork",
+    species: "Белый аист",
+    latin: "Ciconia ciconia",
+    color: "#22c55e",
+    rare: false,
+    points: [
+      { lat: 51.40, lon: 45.20, date: "2024-05-01", time: "09:00", count: 2 },
+      { lat: 51.80, lon: 46.00, date: "2024-05-08", time: "10:20", count: 3 },
+      { lat: 52.46, lon: 46.89, date: "2024-05-20", time: "10:00", count: 3 },
+      { lat: 52.90, lon: 47.60, date: "2024-06-02", time: "08:30", count: 4 },
+    ],
+  },
+]
+
+// ─── Даты всех точек треков ──────────────────────────────────────────────────
+const ALL_DATES = TRACKS.flatMap(t => t.points.map(p => p.date)).sort()
+const MIN_DATE = ALL_DATES[0]
+const MAX_DATE = ALL_DATES[ALL_DATES.length - 1]
 
 const STATUS_COLOR: Record<string, string> = {
   confirmed:            "#22c55e",
@@ -28,7 +92,6 @@ const STATUS_COLOR: Record<string, string> = {
   draft:                "#94a3b8",
   rejected:             "#ef4444",
 }
-
 const STATUS_LABEL: Record<string, string> = {
   confirmed:           "Подтверждено",
   submitted:           "На проверке",
@@ -37,100 +100,109 @@ const STATUS_LABEL: Record<string, string> = {
   rejected:            "Отклонено",
 }
 
-const FILTERS = [
-  { value: "all",          label: "Все" },
-  { value: "confirmed",    label: "Подтверждённые" },
-  { value: "rare",         label: "Редкие виды" },
-  { value: "SS-2024-001",  label: "SS-2024-001" },
-  { value: "SS-2024-002",  label: "SS-2024-002" },
-  { value: "SS-2024-003",  label: "SS-2024-003" },
-]
+type ObsPoint = typeof POINTS[0]
+type Track    = typeof TRACKS[0]
 
-type Point = typeof POINTS[0]
+function daysBetween(a: string, b: string) {
+  return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000)
+}
+
+// Стрелка в конец полилинии
+function addArrow(map: L.Map, latlngs: [number, number][], color: string, layer: L.LayerGroup) {
+  if (latlngs.length < 2) return
+  const last  = latlngs[latlngs.length - 1]
+  const prev  = latlngs[latlngs.length - 2]
+  const angle = Math.atan2(last[1] - prev[1], last[0] - prev[0]) * 180 / Math.PI
+
+  const arrow = L.divIcon({
+    html: `<div style="
+      width:0;height:0;
+      border-left:7px solid transparent;
+      border-right:7px solid transparent;
+      border-bottom:14px solid ${color};
+      transform:rotate(${angle - 90}deg);
+      transform-origin:center bottom;
+    "></div>`,
+    iconSize: [14, 14],
+    iconAnchor: [7, 7],
+    className: "",
+  })
+  layer.addLayer(L.marker(last, { icon: arrow, interactive: false }))
+}
 
 export default function BirdMapPage() {
-  const mapRef = useRef<HTMLDivElement>(null)
-  const leafletMap = useRef<L.Map | null>(null)
+  const mapRef       = useRef<HTMLDivElement>(null)
+  const leafletMap   = useRef<L.Map | null>(null)
   const markersLayer = useRef<L.LayerGroup | null>(null)
-  const tileLayer = useRef<L.TileLayer | null>(null)
-  const [filter, setFilter] = useState("all")
-  const [selected, setSelected] = useState<Point | null>(null)
-  const { theme } = useTheme()
-  const themeRef = useRef(theme)
+  const tracksLayer  = useRef<L.LayerGroup | null>(null)
+  const tileLayer    = useRef<L.TileLayer | null>(null)
+  const themeRef     = useRef("")
 
-  // Всегда актуальное значение темы в ref
+  const [mode, setMode]             = useState<"points" | "tracks">("points")
+  const [filter, setFilter]         = useState("all")
+  const [dateFrom, setDateFrom]     = useState(MIN_DATE)
+  const [dateTo, setDateTo]         = useState(MAX_DATE)
+  const [activeTrack, setActiveTrack] = useState<string | null>(null)
+  const [selectedPoint, setSelectedPoint] = useState<ObsPoint | null>(null)
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
+  const { theme } = useTheme()
+
   useEffect(() => { themeRef.current = theme }, [theme])
 
-  const visible = POINTS.filter(p => {
+  const visiblePoints = POINTS.filter(p => {
     if (filter === "all")       return true
     if (filter === "confirmed") return p.status === "confirmed"
     if (filter === "rare")      return p.rare
     return p.session === filter
   })
 
-  // Init map once
+  const visibleTracks = TRACKS.filter(t =>
+    !activeTrack || t.id === activeTrack
+  ).map(t => ({
+    ...t,
+    points: t.points.filter(p => p.date >= dateFrom && p.date <= dateTo),
+  })).filter(t => t.points.length > 0)
+
+  // ── Инициализация карты ──────────────────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return
-
-    const map = L.map(mapRef.current, {
-      center: [50.5, 45.0],
-      zoom: 5,
-      zoomControl: true,
-    })
-
-    tileLayer.current = L.tileLayer(themeRef.current === "dark" ? TILE_DARK : TILE_LIGHT, {
-      attribution: "",
-      maxZoom: 19,
-    }).addTo(map)
-
-    map.attributionControl.remove()
-
+    const map = L.map(mapRef.current, { center: [50.5, 45.0], zoom: 5 })
+    tileLayer.current   = L.tileLayer(themeRef.current === "dark" ? TILE_DARK : TILE_LIGHT, { attribution: "", maxZoom: 19 }).addTo(map)
     markersLayer.current = L.layerGroup().addTo(map)
+    tracksLayer.current  = L.layerGroup().addTo(map)
+    map.attributionControl.remove()
     leafletMap.current = map
-
-    return () => {
-      map.remove()
-      leafletMap.current = null
-    }
+    return () => { map.remove(); leafletMap.current = null }
   }, [])
 
-  // Swap tile layer on theme change
+  // ── Смена тайлов при смене темы ─────────────────────────────────────────
   useEffect(() => {
     if (!leafletMap.current || !tileLayer.current) return
     tileLayer.current.remove()
-    tileLayer.current = L.tileLayer(theme === "dark" ? TILE_DARK : TILE_LIGHT, {
-      attribution: "",
-      maxZoom: 19,
-    }).addTo(leafletMap.current)
+    tileLayer.current = L.tileLayer(theme === "dark" ? TILE_DARK : TILE_LIGHT, { attribution: "", maxZoom: 19 }).addTo(leafletMap.current)
   }, [theme])
 
-  // Update markers when filter changes
+  // ── Режим точек ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (!markersLayer.current) return
-
     markersLayer.current.clearLayers()
+    if (mode !== "points") return
 
-    visible.forEach(p => {
-      const color = STATUS_COLOR[p.status] ?? "#94a3b8"
-      const radius = p.rare ? 11 : 8
-      const weight = p.rare ? 3 : 1.5
-      const borderColor = p.rare ? "#f59e0b" : color
-
+    visiblePoints.forEach(p => {
+      const color  = STATUS_COLOR[p.status] ?? "#94a3b8"
       const circle = L.circleMarker([p.lat, p.lon], {
-        radius,
+        radius: p.rare ? 11 : 8,
         fillColor: color,
-        color: borderColor,
-        weight,
+        color: p.rare ? "#f59e0b" : color,
+        weight: p.rare ? 3 : 1.5,
         fillOpacity: 0.88,
-        opacity: 1,
       })
-
       circle.bindPopup(`
         <div style="font-family:system-ui,sans-serif;min-width:180px">
           <div style="font-weight:700;font-size:14px;margin-bottom:2px">${p.species}</div>
           <div style="color:#6b7280;font-size:11px;margin-bottom:8px">${p.session}</div>
           <div style="display:flex;gap:12px;margin-bottom:6px">
-            <div><div style="font-size:10px;color:#6b7280">Численность</div><div style="font-weight:700;font-size:18px;color:${color}">${p.count}</div></div>
+            <div><div style="font-size:10px;color:#6b7280">Числ.</div><div style="font-weight:700;font-size:18px;color:${color}">${p.count}</div></div>
             <div><div style="font-size:10px;color:#6b7280">Биотоп</div><div style="font-size:12px">${p.biotope}</div></div>
           </div>
           <div style="font-size:11px;color:#6b7280">Статус: <span style="font-weight:600;color:${color}">${STATUS_LABEL[p.status]}</span></div>
@@ -138,110 +210,286 @@ export default function BirdMapPage() {
           <div style="font-size:10px;color:#9ca3af;margin-top:6px">📍 ${p.lat.toFixed(4)}°N, ${p.lon.toFixed(4)}°E</div>
         </div>
       `, { maxWidth: 260 })
-
-      circle.on("click", () => setSelected(p))
-
+      circle.on("click", () => { setSelectedPoint(p); setSelectedTrack(null) })
       markersLayer.current!.addLayer(circle)
     })
-  }, [filter, visible.length])
+  }, [mode, filter, visiblePoints.length])
+
+  // ── Режим треков ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!tracksLayer.current || !leafletMap.current) return
+    tracksLayer.current.clearLayers()
+    markersLayer.current?.clearLayers()
+    if (mode !== "tracks") return
+
+    visibleTracks.forEach(track => {
+      const latlngs = track.points.map(p => [p.lat, p.lon] as [number, number])
+      if (latlngs.length < 1) return
+
+      // Линия трека
+      if (latlngs.length > 1) {
+        L.polyline(latlngs, {
+          color: track.color,
+          weight: 3,
+          opacity: 0.85,
+          dashArray: "8 4",
+        }).addTo(tracksLayer.current!)
+
+        addArrow(leafletMap.current!, latlngs, track.color, tracksLayer.current!)
+      }
+
+      // Точки фиксации
+      track.points.forEach((p, idx) => {
+        const isFirst = idx === 0
+        const isLast  = idx === track.points.length - 1
+
+        const circle = L.circleMarker([p.lat, p.lon], {
+          radius:      isFirst || isLast ? 9 : 6,
+          fillColor:   track.color,
+          color:       isLast ? "#fff" : track.color,
+          weight:      isLast ? 2.5 : 1,
+          fillOpacity: isFirst ? 0.5 : 0.9,
+        })
+
+        const daysObs = track.points.length > 1
+          ? daysBetween(track.points[0].date, track.points[track.points.length - 1].date)
+          : 0
+
+        circle.bindPopup(`
+          <div style="font-family:system-ui,sans-serif;min-width:190px">
+            <div style="font-weight:700;font-size:13px;color:${track.color}">${track.species}</div>
+            <div style="color:#6b7280;font-size:10px;font-style:italic;margin-bottom:8px">${track.latin}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+              <div style="background:#f3f4f6;border-radius:6px;padding:6px;text-align:center">
+                <div style="font-size:9px;color:#6b7280">Фиксация</div>
+                <div style="font-weight:700;font-size:12px">${idx + 1} из ${track.points.length}</div>
+              </div>
+              <div style="background:#f3f4f6;border-radius:6px;padding:6px;text-align:center">
+                <div style="font-size:9px;color:#6b7280">Особей</div>
+                <div style="font-weight:700;font-size:12px;color:${track.color}">${p.count}</div>
+              </div>
+            </div>
+            <div style="font-size:11px;margin-bottom:3px">📅 ${p.date} · ${p.time}</div>
+            <div style="font-size:10px;color:#9ca3af">📍 ${p.lat.toFixed(4)}°N, ${p.lon.toFixed(4)}°E</div>
+            ${daysObs > 0 ? `<div style="margin-top:6px;font-size:10px;color:#6b7280">⏱ Под наблюдением: <b>${daysObs} дн.</b></div>` : ""}
+          </div>
+        `, { maxWidth: 280 })
+
+        circle.on("click", () => { setSelectedTrack(track as Track); setSelectedPoint(null) })
+        tracksLayer.current!.addLayer(circle)
+      })
+    })
+  }, [mode, dateFrom, dateTo, activeTrack])
+
+  // ─── JSX ─────────────────────────────────────────────────────────────────
+  const FILTERS = [
+    { value: "all",         label: "Все" },
+    { value: "confirmed",   label: "Подтверждённые" },
+    { value: "rare",        label: "Редкие виды" },
+    { value: "SS-2024-001", label: "SS-2024-001" },
+    { value: "SS-2024-002", label: "SS-2024-002" },
+    { value: "SS-2024-003", label: "SS-2024-003" },
+  ]
 
   return (
     <OrnithologyLayout>
-      <div className="flex flex-col" style={{ height: "calc(100vh - 0px)" }}>
+      <div className="flex flex-col" style={{ height: "100vh" }}>
 
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-border bg-background flex-shrink-0">
-          <div className="flex items-center gap-2 mr-2">
-            <Icon name="Map" size={15} className="text-bird" />
-            <span className="font-semibold text-sm">Карта наблюдений</span>
+        {/* ── Toolbar ── */}
+        <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-border bg-background flex-shrink-0">
+
+          {/* Режим */}
+          <div className="flex rounded-lg border border-border overflow-hidden text-xs font-medium">
+            <button
+              onClick={() => { setMode("points"); setSelectedTrack(null) }}
+              className={`px-3 py-1.5 transition-colors ${mode === "points" ? "bg-bird text-white" : "text-muted-foreground hover:bg-muted"}`}
+            >
+              <Icon name="MapPin" size={13} className="inline mr-1" />
+              Точки
+            </button>
+            <button
+              onClick={() => { setMode("tracks"); setSelectedPoint(null) }}
+              className={`px-3 py-1.5 transition-colors ${mode === "tracks" ? "bg-bird text-white" : "text-muted-foreground hover:bg-muted"}`}
+            >
+              <Icon name="Waypoints" size={13} className="inline mr-1" />
+              Векторы
+            </button>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {FILTERS.map(f => (
-              <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border
-                  ${filter === f.value
-                    ? "bg-bird text-white border-bird"
-                    : "bg-background border-border text-muted-foreground hover:border-bird/40"
-                  }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-          <span className="ml-auto text-xs text-muted-foreground">{visible.length} точек</span>
+
+          {/* Фильтры точек */}
+          {mode === "points" && (
+            <div className="flex flex-wrap gap-1.5">
+              {FILTERS.map(f => (
+                <button key={f.value} onClick={() => setFilter(f.value)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
+                    ${filter === f.value ? "bg-bird text-white border-bird" : "border-border text-muted-foreground hover:border-bird/40"}`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Фильтры треков */}
+          {mode === "tracks" && (
+            <div className="flex flex-wrap gap-2 items-center">
+              <input type="date" value={dateFrom} min={MIN_DATE} max={dateTo}
+                onChange={e => setDateFrom(e.target.value)}
+                className="px-2 py-1 text-xs bg-background border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-bird/50"
+              />
+              <span className="text-xs text-muted-foreground">—</span>
+              <input type="date" value={dateTo} min={dateFrom} max={MAX_DATE}
+                onChange={e => setDateTo(e.target.value)}
+                className="px-2 py-1 text-xs bg-background border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-bird/50"
+              />
+              <div className="flex flex-wrap gap-1.5 ml-1">
+                <button onClick={() => setActiveTrack(null)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
+                    ${!activeTrack ? "bg-bird text-white border-bird" : "border-border text-muted-foreground hover:border-bird/40"}`}
+                >
+                  Все
+                </button>
+                {TRACKS.map(t => (
+                  <button key={t.id} onClick={() => setActiveTrack(prev => prev === t.id ? null : t.id)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
+                      ${activeTrack === t.id ? "text-white border-transparent" : "border-border text-muted-foreground hover:border-bird/40"}`}
+                    style={activeTrack === t.id ? { background: t.color, borderColor: t.color } : {}}
+                  >
+                    <span className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ background: t.color }} />
+                    {t.species}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <span className="ml-auto text-xs text-muted-foreground">
+            {mode === "points" ? `${visiblePoints.length} точек` : `${visibleTracks.length} треков`}
+          </span>
         </div>
 
-        {/* Content */}
+        {/* ── Карта + панель ── */}
         <div className="flex flex-1 overflow-hidden">
-
-          {/* Map */}
           <div className="flex-1 relative">
             <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
           </div>
 
-          {/* Side panel */}
-          {selected && (
-            <div className="w-72 border-l border-border bg-background overflow-y-auto flex-shrink-0">
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-sm">Наблюдение</h3>
-                  <button
-                    onClick={() => setSelected(null)}
-                    className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
-                  >
-                    <Icon name="X" size={15} />
-                  </button>
+          {/* Панель точки */}
+          {selectedPoint && mode === "points" && (
+            <div className="w-72 border-l border-border bg-background overflow-y-auto flex-shrink-0 p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-sm">Наблюдение</h3>
+                <button onClick={() => setSelectedPoint(null)} className="p-1 text-muted-foreground hover:text-foreground">
+                  <Icon name="X" size={15} />
+                </button>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-0.5">Вид</div>
+                  <div className="font-semibold">{selectedPoint.species}</div>
+                  {selectedPoint.rare && <div className="text-amber-500 text-xs mt-0.5 flex items-center gap-1"><Icon name="Star" size={11} />Редкий вид</div>}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-muted rounded-xl p-3 text-center">
+                    <div className="text-xs text-muted-foreground">Числ.</div>
+                    <div className="text-2xl font-bold text-bird">{selectedPoint.count}</div>
+                  </div>
+                  <div className="bg-muted rounded-xl p-3 text-center">
+                    <div className="text-xs text-muted-foreground">Сессия</div>
+                    <div className="text-xs font-mono font-semibold">{selectedPoint.session}</div>
+                  </div>
+                </div>
+                <div><div className="text-xs text-muted-foreground mb-0.5">Биотоп</div><div className="text-sm">{selectedPoint.biotope}</div></div>
+                <div><div className="text-xs text-muted-foreground mb-0.5">Координаты</div>
+                  <div className="text-xs font-mono bg-muted rounded-lg p-2">{selectedPoint.lat.toFixed(4)}°N&nbsp;&nbsp;{selectedPoint.lon.toFixed(4)}°E</div>
+                </div>
+                <div>
+                  <span className="text-xs px-3 py-1 rounded-full font-medium"
+                    style={{ background: STATUS_COLOR[selectedPoint.status] + "22", color: STATUS_COLOR[selectedPoint.status], border: `1px solid ${STATUS_COLOR[selectedPoint.status]}44` }}>
+                    {STATUS_LABEL[selectedPoint.status]}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Панель трека */}
+          {selectedTrack && mode === "tracks" && (
+            <div className="w-80 border-l border-border bg-background overflow-y-auto flex-shrink-0 p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-sm">Вектор перемещения</h3>
+                <button onClick={() => setSelectedTrack(null)} className="p-1 text-muted-foreground hover:text-foreground">
+                  <Icon name="X" size={15} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: selectedTrack.color }} />
+                  <div>
+                    <div className="font-semibold">{selectedTrack.species}</div>
+                    <div className="text-xs italic text-muted-foreground">{selectedTrack.latin}</div>
+                  </div>
+                  {selectedTrack.rare && <Icon name="Star" size={13} className="text-amber-500 ml-auto" />}
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">Вид</div>
-                    <div className="font-semibold">{selected.species}</div>
-                    {selected.rare && (
-                      <div className="flex items-center gap-1 text-amber-500 text-xs mt-1">
-                        <Icon name="Star" size={11} />
-                        Редкий / охраняемый вид
+                {/* KPI трека */}
+                {(() => {
+                  const pts = selectedTrack.points.filter(p => p.date >= dateFrom && p.date <= dateTo)
+                  const daysObs = pts.length > 1 ? daysBetween(pts[0].date, pts[pts.length - 1].date) : 0
+                  const totalCount = pts.reduce((s, p) => s + p.count, 0)
+                  return (
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-muted rounded-xl p-3 text-center">
+                        <div className="text-xs text-muted-foreground">Фиксаций</div>
+                        <div className="text-xl font-bold" style={{ color: selectedTrack.color }}>{pts.length}</div>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-muted rounded-xl p-3 text-center">
-                      <div className="text-xs text-muted-foreground mb-0.5">Численность</div>
-                      <div className="text-2xl font-bold text-bird">{selected.count}</div>
+                      <div className="bg-muted rounded-xl p-3 text-center">
+                        <div className="text-xs text-muted-foreground">Дней</div>
+                        <div className="text-xl font-bold text-bird">{daysObs}</div>
+                      </div>
+                      <div className="bg-muted rounded-xl p-3 text-center">
+                        <div className="text-xs text-muted-foreground">Особей</div>
+                        <div className="text-xl font-bold text-emerald-500">{totalCount}</div>
+                      </div>
                     </div>
-                    <div className="bg-muted rounded-xl p-3 text-center">
-                      <div className="text-xs text-muted-foreground mb-0.5">Сессия</div>
-                      <div className="text-xs font-mono font-semibold">{selected.session}</div>
+                  )
+                })()}
+
+                {/* Хронология */}
+                <div>
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Хронология фиксаций</div>
+                  <div className="relative">
+                    {/* вертикальная линия */}
+                    <div className="absolute left-[11px] top-2 bottom-2 w-px" style={{ background: selectedTrack.color + "44" }} />
+                    <div className="space-y-3">
+                      {selectedTrack.points.filter(p => p.date >= dateFrom && p.date <= dateTo).map((p, idx, arr) => (
+                        <div key={idx} className="flex gap-3 items-start relative">
+                          <div className="w-[22px] h-[22px] rounded-full flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold z-10"
+                            style={{ background: idx === arr.length - 1 ? selectedTrack.color : selectedTrack.color + "88" }}>
+                            {idx + 1}
+                          </div>
+                          <div className="flex-1 bg-muted rounded-xl p-2.5 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-medium">{p.date}</span>
+                              <span className="text-xs text-muted-foreground">{p.time}</span>
+                            </div>
+                            <div className="flex items-center gap-3 mt-1">
+                              <span className="text-xs text-muted-foreground">Особей:</span>
+                              <span className="text-sm font-bold" style={{ color: selectedTrack.color }}>{p.count}</span>
+                            </div>
+                            <div className="text-[10px] font-mono text-muted-foreground mt-0.5">
+                              {p.lat.toFixed(4)}°N {p.lon.toFixed(4)}°E
+                            </div>
+                            {idx > 0 && (
+                              <div className="text-[10px] text-muted-foreground mt-0.5">
+                                +{daysBetween(arr[idx - 1].date, p.date)} дн. с предыдущей
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">Биотоп</div>
-                    <div className="text-sm">{selected.biotope}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">Координаты</div>
-                    <div className="text-xs font-mono bg-muted rounded-lg p-2">
-                      {selected.lat.toFixed(4)}°N&nbsp;&nbsp;{selected.lon.toFixed(4)}°E
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1.5">Статус</div>
-                    <span
-                      className="text-xs px-3 py-1 rounded-full font-medium"
-                      style={{
-                        background: STATUS_COLOR[selected.status] + "22",
-                        color: STATUS_COLOR[selected.status],
-                        border: `1px solid ${STATUS_COLOR[selected.status]}44`,
-                      }}
-                    >
-                      {STATUS_LABEL[selected.status]}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -249,18 +497,40 @@ export default function BirdMapPage() {
           )}
         </div>
 
-        {/* Legend */}
+        {/* ── Легенда ── */}
         <div className="flex flex-wrap items-center gap-4 px-4 py-2 border-t border-border bg-background text-xs text-muted-foreground flex-shrink-0">
-          {Object.entries(STATUS_COLOR).map(([s, c]) => (
-            <div key={s} className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: c }} />
-              {STATUS_LABEL[s]}
-            </div>
-          ))}
-          <div className="flex items-center gap-1.5 ml-3 pl-3 border-l border-border">
-            <span className="w-2.5 h-2.5 rounded-full border-2 border-amber-400 flex-shrink-0" />
-            Редкий вид
-          </div>
+          {mode === "points" ? (
+            <>
+              {Object.entries(STATUS_COLOR).map(([s, c]) => (
+                <div key={s} className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: c }} />
+                  {STATUS_LABEL[s]}
+                </div>
+              ))}
+              <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-border">
+                <span className="w-2.5 h-2.5 rounded-full border-2 border-amber-400 flex-shrink-0" />
+                Редкий вид
+              </div>
+            </>
+          ) : (
+            <>
+              {TRACKS.map(t => (
+                <div key={t.id} className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.color }} />
+                  {t.species}
+                  {t.rare && <Icon name="Star" size={10} className="text-amber-400" />}
+                </div>
+              ))}
+              <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-border">
+                <span className="inline-block w-6 border-t-2 border-dashed border-gray-400" />
+                Вектор перемещения
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full border-2 border-white bg-bird flex-shrink-0" />
+                Последняя фиксация
+              </div>
+            </>
+          )}
         </div>
       </div>
     </OrnithologyLayout>
