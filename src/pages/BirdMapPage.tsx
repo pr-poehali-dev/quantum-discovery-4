@@ -56,6 +56,10 @@ export default function BirdMapPage() {
   const [filter, setFilter] = useState("all")
   const [selected, setSelected] = useState<Point | null>(null)
   const { theme } = useTheme()
+  const themeRef = useRef(theme)
+
+  // Всегда актуальное значение темы в ref
+  useEffect(() => { themeRef.current = theme }, [theme])
 
   const visible = POINTS.filter(p => {
     if (filter === "all")       return true
@@ -74,7 +78,7 @@ export default function BirdMapPage() {
       zoomControl: true,
     })
 
-    tileLayer.current = L.tileLayer(TILE_LIGHT, {
+    tileLayer.current = L.tileLayer(themeRef.current === "dark" ? TILE_DARK : TILE_LIGHT, {
       attribution: "",
       maxZoom: 19,
     }).addTo(map)
