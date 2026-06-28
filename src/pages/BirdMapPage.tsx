@@ -82,8 +82,23 @@ const TRACKS = [
 
 // ─── Даты всех точек треков ──────────────────────────────────────────────────
 const ALL_DATES = TRACKS.flatMap(t => t.points.map(p => p.date)).sort()
-const MIN_DATE = ALL_DATES[0]
-const MAX_DATE = ALL_DATES[ALL_DATES.length - 1]
+const MIN_DATE  = ALL_DATES[0]
+const MAX_DATE  = ALL_DATES[ALL_DATES.length - 1]
+
+// Уникальные отсортированные даты для шкалы
+const UNIQUE_DATES = [...new Set(ALL_DATES)]
+
+function dateToIdx(date: string): number {
+  const idx = UNIQUE_DATES.indexOf(date)
+  return idx >= 0 ? idx : 0
+}
+function idxToDate(idx: number): string {
+  return UNIQUE_DATES[Math.min(idx, UNIQUE_DATES.length - 1)]
+}
+function fmtDate(d: string): string {
+  const [y, m, day] = d.split("-")
+  return `${day}.${m}.${y}`
+}
 
 const STATUS_COLOR: Record<string, string> = {
   confirmed:            "#22c55e",
@@ -151,12 +166,15 @@ export default function BirdMapPage() {
 
   const [mode, setMode]             = useState<"points" | "tracks">("points")
   const [filter, setFilter]         = useState("all")
-  const [dateFrom, setDateFrom]     = useState(MIN_DATE)
-  const [dateTo, setDateTo]         = useState(MAX_DATE)
+  const [fromIdx, setFromIdx]       = useState(0)
+  const [toIdx, setToIdx]           = useState(UNIQUE_DATES.length - 1)
   const [activeTrack, setActiveTrack] = useState<string | null>(null)
   const [selectedPoint, setSelectedPoint] = useState<ObsPoint | null>(null)
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
   const { theme } = useTheme()
+
+  const dateFrom = idxToDate(fromIdx)
+  const dateTo   = idxToDate(toIdx)
 
   useEffect(() => { themeRef.current = theme }, [theme])
 
@@ -344,15 +362,13 @@ export default function BirdMapPage() {
           {/* Фильтры треков */}
           {mode === "tracks" && (
             <div className="flex flex-wrap gap-2 items-center">
-              <input type="date" value={dateFrom} min={MIN_DATE} max={dateTo}
-                onChange={e => setDateFrom(e.target.value)}
-                className="px-2 py-1 text-xs bg-background border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-bird/50"
-              />
-              <span className="text-xs text-muted-foreground">—</span>
-              <input type="date" value={dateTo} min={dateFrom} max={MAX_DATE}
-                onChange={e => setDateTo(e.target.value)}
-                className="px-2 py-1 text-xs bg-background border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-bird/50"
-              />
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Icon name="Calendar" size={13} className="text-bird" />
+                <span className="font-medium text-foreground">{fmtDate(dateFrom)}</span>
+                <span>—</span>
+                <span className="font-medium text-foreground">{fmtDate(dateTo)}</span>
+                <span className="text-muted-foreground ml-1">({daysBetween(dateFrom, dateTo)} дн.)</span>
+              </div>
               <div className="flex flex-wrap gap-1.5 ml-1">
                 <button onClick={() => setActiveTrack(null)}
                   className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
@@ -507,6 +523,90 @@ export default function BirdMapPage() {
             </div>
           )}
         </div>
+
+        {/* ── Временной ползунок (только в режиме векторов) ── */}
+        {mode === "tracks" && (
+          <div className="flex-shrink-0 border-t border-border bg-background px-6 py-3">
+            <div className="max-w-3xl mx-auto">
+              {/* Метки крайних дат + текущий диапазон */}
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+                <span>{fmtDate(MIN_DATE)}</span>
+                <span className="text-bird font-semibold">
+                  {fmtDate(dateFrom)} — {fmtDate(dateTo)}
+                </span>
+                <span>{fmtDate(MAX_DATE)}</span>
+              </div>
+
+              {/* Двойной range slider */}
+              <div className="timeline-slider relative h-6 flex items-center">
+                {/* Трек */}
+                <div className="absolute w-full h-1.5 bg-border rounded-full" />
+
+                {/* Закрашенный диапазон */}
+                <div
+                  className="absolute h-1.5 bg-bird rounded-full pointer-events-none"
+                  style={{
+                    left:  `${(fromIdx / (UNIQUE_DATES.length - 1)) * 100}%`,
+                    right: `${100 - (toIdx / (UNIQUE_DATES.length - 1)) * 100}%`,
+                  }}
+                />
+
+                {/* Ползунок "от" */}
+                <input
+                  type="range"
+                  min={0}
+                  max={UNIQUE_DATES.length - 1}
+                  value={fromIdx}
+                  onChange={e => {
+                    const v = Number(e.target.value)
+                    if (v <= toIdx) setFromIdx(v)
+                  }}
+                  className="absolute w-full h-1.5 appearance-none bg-transparent cursor-pointer"
+                  style={{ zIndex: fromIdx >= toIdx - 1 ? 5 : 3 }}
+                />
+
+                {/* Ползунок "до" */}
+                <input
+                  type="range"
+                  min={0}
+                  max={UNIQUE_DATES.length - 1}
+                  value={toIdx}
+                  onChange={e => {
+                    const v = Number(e.target.value)
+                    if (v >= fromIdx) setToIdx(v)
+                  }}
+                  className="absolute w-full h-1.5 appearance-none bg-transparent cursor-pointer"
+                  style={{ zIndex: 4 }}
+                />
+              </div>
+
+              {/* Засечки дат */}
+              <div className="relative mt-1">
+                <div className="flex justify-between">
+                  {UNIQUE_DATES.map((d, i) => (
+                    <button
+                      key={d}
+                      onClick={() => {
+                        if (i <= toIdx)   setFromIdx(i)
+                        if (i >= fromIdx) setToIdx(i)
+                      }}
+                      className={`flex flex-col items-center gap-0.5 group transition-opacity
+                        ${d >= dateFrom && d <= dateTo ? "opacity-100" : "opacity-40"}`}
+                    >
+                      <div className={`w-0.5 h-2 rounded-full transition-colors
+                        ${d >= dateFrom && d <= dateTo ? "bg-bird" : "bg-border"}`}
+                      />
+                      <span className={`text-[9px] whitespace-nowrap transition-colors
+                        ${d >= dateFrom && d <= dateTo ? "text-bird font-medium" : "text-muted-foreground"}`}>
+                        {fmtDate(d).slice(0, 5)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Легенда ── */}
         <div className="flex flex-wrap items-center gap-4 px-4 py-2 border-t border-border bg-background text-xs text-muted-foreground flex-shrink-0">
