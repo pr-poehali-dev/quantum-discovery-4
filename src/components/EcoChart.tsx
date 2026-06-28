@@ -11,6 +11,7 @@ import {
 } from "recharts"
 import { MonitoringPoint, STATUS_COLORS, ALL_POINTS } from "@/components/EcoMap"
 import Icon from "@/components/ui/icon"
+import { useTheme } from "@/hooks/useTheme"
 
 const PERIOD_OPTIONS = [
   { label: "7 дней", days: 7 },
@@ -79,14 +80,14 @@ interface MultiTooltipProps {
 function MultiTooltip({ active, payload, label, points }: MultiTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-black/90 border border-white/15 rounded-xl px-3 py-2 text-xs shadow-xl min-w-[150px]">
-      <div className="text-white/50 mb-2">{label}</div>
+    <div className="bg-background border border-border rounded-xl px-3 py-2 text-xs shadow-xl min-w-[150px]">
+      <div className="text-muted-foreground mb-2">{label}</div>
       {payload.map((entry) => {
         const point = points.find(p => `p${p.id}` === entry.dataKey)
         return (
           <div key={entry.dataKey} className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: entry.color }} />
-            <span className="text-white/70 truncate max-w-[110px]">{point?.name ?? entry.dataKey}</span>
+            <span className="text-foreground truncate max-w-[110px]">{point?.name ?? entry.dataKey}</span>
             <span className="font-bold ml-auto" style={{ color: entry.color }}>{entry.value}</span>
           </div>
         )
@@ -106,6 +107,13 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
   const [mode, setMode] = useState<"single" | "compare">("single")
   const [activePointId, setActivePointId] = useState<number | null>(null)
   const [compareIds, setCompareIds] = useState<number[]>([])
+  const { theme } = useTheme()
+
+  const isDark = theme === "dark"
+  const tickColor = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.45)"
+  const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)"
+  const refLineColor = isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)"
+  const refLabelColor = isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)"
 
   const singlePoint = selectedPoint ?? (activePointId ? ALL_POINTS.find(p => p.id === activePointId) : ALL_POINTS[0])
 
@@ -145,12 +153,12 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
   const regions = Array.from(new Set(ALL_POINTS.map(p => p.region)))
 
   return (
-    <div className="rounded-3xl bg-white/5 ring-1 ring-white/10 backdrop-blur p-8">
+    <div className="rounded-3xl bg-muted ring-1 ring-border p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h3 className="text-2xl font-bold mb-1">График динамики</h3>
-          <p className="text-white/50 text-sm">
+          <p className="text-muted-foreground text-sm">
             {mode === "single"
               ? singlePoint ? `${singlePoint.name} · ${singlePoint.region}` : "Выберите точку ниже"
               : comparePoints.length
@@ -160,16 +168,16 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
         </div>
         <div className="flex flex-wrap gap-2 items-center">
           {/* Mode toggle */}
-          <div className="flex rounded-full border border-white/15 overflow-hidden">
+          <div className="flex rounded-full border border-border overflow-hidden">
             <button
               onClick={() => setMode("single")}
-              className={`px-4 py-1.5 text-sm font-semibold transition-all ${mode === "single" ? "bg-eco text-black" : "text-white/60 hover:text-white"}`}
+              className={`px-4 py-1.5 text-sm font-semibold transition-all ${mode === "single" ? "bg-eco text-black" : "text-muted-foreground hover:text-foreground"}`}
             >
               Одна точка
             </button>
             <button
               onClick={() => setMode("compare")}
-              className={`px-4 py-1.5 text-sm font-semibold transition-all ${mode === "compare" ? "bg-eco text-black" : "text-white/60 hover:text-white"}`}
+              className={`px-4 py-1.5 text-sm font-semibold transition-all ${mode === "compare" ? "bg-eco text-black" : "text-muted-foreground hover:text-foreground"}`}
             >
               Сравнение
             </button>
@@ -182,7 +190,7 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
               className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all border
                 ${period === opt.days
                   ? "bg-eco text-black border-eco"
-                  : "bg-white/5 text-white/70 border-white/15 hover:border-eco/40"
+                  : "bg-background text-muted-foreground border-border hover:border-eco/40"
                 }`}
             >
               {opt.label}
@@ -199,10 +207,10 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
             { label: "Максимум", val: max },
             { label: "Минимум", val: min },
           ].map(s => (
-            <div key={s.label} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-4 text-center">
-              <div className="text-xs text-white/40 mb-1">{s.label}</div>
+            <div key={s.label} className="rounded-2xl bg-background ring-1 ring-border p-4 text-center">
+              <div className="text-xs text-muted-foreground mb-1">{s.label}</div>
               <div className="text-xl font-bold" style={{ color }}>{s.val}</div>
-              <div className="text-xs text-white/30">{singlePoint?.unit ?? ""}</div>
+              <div className="text-xs text-muted-foreground">{singlePoint?.unit ?? ""}</div>
             </div>
           ))}
         </div>
@@ -212,10 +220,10 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
       {mode === "compare" && comparePoints.length > 0 && (
         <div className="flex flex-wrap gap-3 mb-6">
           {comparePoints.map((p, i) => (
-            <div key={p.id} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 ring-1 ring-white/10 text-xs">
+            <div key={p.id} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-background ring-1 ring-border text-xs">
               <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: COMPARE_COLORS[i] }} />
-              <span className="text-white/80 max-w-[140px] truncate">{p.name}</span>
-              <button onClick={() => toggleCompare(p.id)} className="text-white/30 hover:text-white ml-1">×</button>
+              <span className="text-foreground max-w-[140px] truncate">{p.name}</span>
+              <button onClick={() => toggleCompare(p.id)} className="text-muted-foreground hover:text-foreground ml-1">×</button>
             </div>
           ))}
         </div>
@@ -226,23 +234,23 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
         {mode === "single" ? (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={singleData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis
                 dataKey="date"
-                tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }}
+                tick={{ fill: tickColor, fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
                 interval={period === 7 ? 0 : period === 30 ? 4 : 13}
               />
-              <YAxis tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: tickColor, fontSize: 11 }} tickLine={false} axisLine={false} />
               <Tooltip
                 content={({ active, payload, label }) => {
                   if (!active || !payload?.length) return null
                   return (
-                    <div className="bg-black/90 border border-white/15 rounded-xl px-3 py-2 text-xs shadow-xl">
-                      <div className="text-white/50 mb-1">{label}</div>
+                    <div className="bg-background border border-border rounded-xl px-3 py-2 text-xs shadow-xl">
+                      <div className="text-muted-foreground mb-1">{label}</div>
                       <div className="font-bold text-sm" style={{ color }}>
-                        {payload[0].value} <span className="text-white/50 font-normal">{singlePoint?.unit}</span>
+                        {payload[0].value} <span className="text-muted-foreground font-normal">{singlePoint?.unit}</span>
                       </div>
                     </div>
                   )
@@ -251,9 +259,9 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
               {norm !== undefined && (
                 <ReferenceLine
                   y={norm}
-                  stroke="rgba(255,255,255,0.25)"
+                  stroke={refLineColor}
                   strokeDasharray="6 3"
-                  label={{ value: "норма", fill: "rgba(255,255,255,0.3)", fontSize: 10, position: "insideTopRight" }}
+                  label={{ value: "норма", fill: refLabelColor, fontSize: 10, position: "insideTopRight" }}
                 />
               )}
               <Line
@@ -262,22 +270,22 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
                 stroke={color}
                 strokeWidth={2.5}
                 dot={false}
-                activeDot={{ r: 5, fill: color, stroke: "#000", strokeWidth: 1.5 }}
+                activeDot={{ r: 5, fill: color, stroke: isDark ? "#000" : "#fff", strokeWidth: 1.5 }}
               />
             </LineChart>
           </ResponsiveContainer>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={compareData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
               <XAxis
                 dataKey="date"
-                tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }}
+                tick={{ fill: tickColor, fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
                 interval={period === 7 ? 0 : period === 30 ? 4 : 13}
               />
-              <YAxis tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: tickColor, fontSize: 11 }} tickLine={false} axisLine={false} />
               <Tooltip content={<MultiTooltip points={comparePoints} />} />
               {comparePoints.map((p, i) => (
                 <Line
@@ -287,7 +295,7 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
                   stroke={COMPARE_COLORS[i]}
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, stroke: "#000", strokeWidth: 1 }}
+                  activeDot={{ r: 4, stroke: isDark ? "#000" : "#fff", strokeWidth: 1 }}
                 />
               ))}
             </LineChart>
@@ -297,7 +305,7 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
 
       {/* Point Selector */}
       <div>
-        <div className="text-xs text-white/40 mb-3 uppercase tracking-wider">
+        <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider">
           {mode === "single" ? "Выбор точки мониторинга" : `Выбор точек для сравнения (до ${MAX_COMPARE})`}
         </div>
         <div className="space-y-4">
@@ -317,9 +325,9 @@ export default function EcoChart({ selectedPoint }: EcoChartProps) {
                         else toggleCompare(p.id)
                       }}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all
-                        ${isSingleSelected ? "border-eco bg-eco/10 text-white" : ""}
-                        ${isCompareSelected ? "text-white" : ""}
-                        ${!isSingleSelected && !isCompareSelected ? "border-white/10 bg-white/5 text-white/60 hover:border-white/25" : ""}
+                        ${isSingleSelected ? "border-eco bg-eco/10 text-foreground" : ""}
+                        ${isCompareSelected ? "text-foreground" : ""}
+                        ${!isSingleSelected && !isCompareSelected ? "border-border bg-background text-muted-foreground hover:border-border/60 hover:text-foreground" : ""}
                       `}
                       style={isCompareSelected ? {
                         borderColor: COMPARE_COLORS[compareIdx],

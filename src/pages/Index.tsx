@@ -6,6 +6,7 @@ import EcoMap, { MonitoringPoint } from "@/components/EcoMap"
 import EcoChart from "@/components/EcoChart"
 import AuthModal from "@/components/AuthModal"
 import { useAuth } from "@/context/AuthContext"
+import { useTheme } from "@/hooks/useTheme"
 
 interface FAQ {
   question: string
@@ -17,6 +18,7 @@ const Index = () => {
   const [selectedMapPoint, setSelectedMapPoint] = useState<MonitoringPoint | null>(null)
   const [showAuth, setShowAuth] = useState(false)
   const { user, logout } = useAuth()
+  const { theme, toggle } = useTheme()
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
@@ -93,6 +95,13 @@ const Index = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={toggle}
+              className="p-2 rounded-full bg-black/40 ring-1 ring-white/20 backdrop-blur hover:bg-black/50 transition-colors text-white"
+              title={theme === "dark" ? "Светлая тема" : "Тёмная тема"}
+            >
+              <Icon name={theme === "dark" ? "Sun" : "Moon"} size={16} />
+            </button>
             {user ? (
               <>
                 <span className="px-4 py-2 bg-white/10 ring-1 ring-white/20 backdrop-blur rounded-full text-sm text-white/80 hidden md:block max-w-[140px] truncate">{user.name}</span>
